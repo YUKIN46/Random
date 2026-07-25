@@ -13,7 +13,12 @@ export default async function PendingOrgsPage() {
 
   return (
     <main className="max-w-4xl mx-auto py-12 px-6">
-      <h1 className="text-2xl font-semibold mb-6">Pending school applications</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold">Pending school applications</h1>
+        <a href="/super-admin/orgs" className="text-sm underline text-neutral-600">
+          View all schools
+        </a>
+      </div>
       {pending.length === 0 ? (
         <p className="text-neutral-500">No applications waiting on review.</p>
       ) : (

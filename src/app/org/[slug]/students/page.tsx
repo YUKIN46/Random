@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireOrgMember } from "@/lib/authz";
 import AddStudentForm from "./add-student-form";
+import BulkImportStudents from "./bulk-import-students";
 
 export default async function StudentsPage({
   params,
@@ -29,10 +30,13 @@ export default async function StudentsPage({
         <h1 className="text-2xl font-semibold">Students</h1>
       </div>
 
-      <AddStudentForm slug={slug} sections={sections.map((s) => ({
-        id: s.id,
-        label: `${s.schoolClass.name} - ${s.name}`,
-      }))} />
+      <div className="flex gap-2">
+        <AddStudentForm slug={slug} sections={sections.map((s) => ({
+          id: s.id,
+          label: `${s.schoolClass.name} - ${s.name}`,
+        }))} />
+        <BulkImportStudents slug={slug} />
+      </div>
 
       <div className="bg-white border border-neutral-200 rounded-xl mt-6 overflow-hidden">
         <table className="w-full text-sm">
