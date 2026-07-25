@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
+import { Role } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/authz";
 
@@ -31,7 +32,7 @@ export async function POST(req: NextRequest) {
       organizationId: org.id,
       employeeCode: employeeCode || null,
       user: {
-        create: { name, email, role: "TEACHER", organizationId: org.id, passwordHash },
+        create: { name, email, role: Role.TEACHER, organizationId: org.id, passwordHash },
       },
     },
   });

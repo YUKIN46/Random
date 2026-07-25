@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
+import type { Role } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -62,9 +63,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       session.user.id = token.sub!;
-      session.user.role = token.role;
-      session.user.organizationId = token.organizationId;
-      session.user.orgSlug = token.orgSlug;
+      session.user.role = token.role as Role;
+      session.user.organizationId = token.organizationId as string | null;
+      session.user.orgSlug = token.orgSlug as string | null;
       return session;
     },
   },

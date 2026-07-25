@@ -4,6 +4,7 @@
  * Reads SUPER_ADMIN_EMAIL / SUPER_ADMIN_PASSWORD from env (see .env.example).
  */
 import bcrypt from "bcryptjs";
+import { Role } from "@prisma/client";
 import { prisma } from "../src/lib/prisma";
 
 async function main() {
@@ -25,7 +26,7 @@ async function main() {
 
   const passwordHash = await bcrypt.hash(password, 10);
   await prisma.user.create({
-    data: { name, email, passwordHash, role: "SUPER_ADMIN" },
+    data: { name, email, passwordHash, role: Role.SUPER_ADMIN },
   });
 
   console.log(`Super admin created: ${email}`);
