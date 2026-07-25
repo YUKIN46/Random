@@ -1,0 +1,70 @@
+import { prisma } from "@/lib/prisma";
+import { requireOrgMember } from "@/lib/authz";
+import AddStudentForm from "./add-student-form";
+
+export default async function StudentsPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  await requireOrgMember(slug);
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
+
+  const [students, sections] = await Promise.all([
+    prisma.student.findMany({
+      where: { organizationId: org.id },
+      include: { user: true, section: { include: { schoolClass: true } } },
+      orderBy: { user: { name: "asc" } },
+    }),
+    prisma.section.findMany({
+      where: { organizationId: org.id },
+      include: { schoolClass: true },
+    }),
+  ]);
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold">Students</h1>
+      </div>
+
+      <AddStudentForm slug={slug} sections={sections.map((s) => ({
+        id: s.id,
+        label: `${s.schoolClass.name} - ${s.name}`,
+      }))} />
+
+      <div className="bg-white border border-neutral-200 rounded-xl mt-6 overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-neutral-50 text-left text-neutral-500">
+            <tr>
+              <th className="px-4 py-3 font-medium">Name</th>
+              <th className="px-4 py-3 font-medium">Email</th>
+              <th className="px-4 py-3 font-medium">Section</th>
+              <th className="px-4 py-3 font-medium">Admission No.</th>
+            </tr>
+          </thead>
+          <tbody>
+            {students.map((s) => (
+              <tr key={s.id} className="border-t border-neutral-100">
+                <td className="px-4 py-3">{s.user.name}</td>
+                <td className="px-4 py-3 text-neutral-500">{s.user.email}</td>
+                <td className="px-4 py-3">
+                  {s.section ? `${s.section.schoolClass.name} - ${s.section.name}` : "—"}
+                </td>
+                <td className="px-4 py-3">{s.admissionNo ?? "—"}</td>
+              </tr>
+            ))}
+            {students.length === 0 && (
+              <tr>
+                <td colSpan={4} className="px-4 py-6 text-center text-neutral-400">
+                  No students yet.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
