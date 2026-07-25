@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
   const teacher = await prisma.teacher.create({
     data: {
-      organizationId: org.id,
+      organization: { connect: { id: org.id } },
       employeeCode: employeeCode || null,
       user: {
         create: { name, email, role: Role.TEACHER, organizationId: org.id, passwordHash },

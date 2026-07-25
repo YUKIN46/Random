@@ -37,8 +37,8 @@ export async function POST(req: NextRequest) {
 
   const student = await prisma.student.create({
     data: {
-      organizationId: org.id,
-      sectionId: sectionId || null,
+      organization: { connect: { id: org.id } },
+      section: sectionId ? { connect: { id: sectionId } } : undefined,
       admissionNo: admissionNo || null,
       user: {
         create: {

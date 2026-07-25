@@ -52,8 +52,8 @@ export async function POST(req: NextRequest) {
 
     await prisma.student.create({
       data: {
-        organizationId: org.id,
-        sectionId: matchedSection?.id ?? null,
+        organization: { connect: { id: org.id } },
+        section: matchedSection ? { connect: { id: matchedSection.id } } : undefined,
         admissionNo: row.admissionNo || null,
         user: {
           create: {

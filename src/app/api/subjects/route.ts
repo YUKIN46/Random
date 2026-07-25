@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
 
   const subject = await prisma.subject.create({
     data: {
-      organizationId: org.id,
+      organization: { connect: { id: org.id } },
       name,
       code: code || null,
       teacherLinks: teacherIds?.length
