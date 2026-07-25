@@ -3,9 +3,17 @@
  * Run with: npm run seed
  * Reads SUPER_ADMIN_EMAIL / SUPER_ADMIN_PASSWORD from env (see .env.example).
  */
+import { config } from "dotenv";
+import path from "path";
 import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
 import { prisma } from "../src/lib/prisma";
+
+// Plain tsx scripts (unlike Next.js itself) don't auto-load .env files, so
+// load them explicitly. .env.local takes precedence, matching Next.js
+// conventions (e.g. after `vercel env pull .env.local`).
+config({ path: path.resolve(__dirname, "../.env.local") });
+config({ path: path.resolve(__dirname, "../.env") });
 
 async function main() {
   const email = process.env.SUPER_ADMIN_EMAIL;
