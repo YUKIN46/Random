@@ -31,9 +31,9 @@ students, and data — fully isolated from other schools on the platform.
    ```
 
 2. **Environment variables** — copy `.env.example` to `.env` and fill in:
-   - `POSTGRES_PRISMA_URL` / `POSTGRES_URL_NON_POOLING` — from a Vercel
-     Postgres database (Storage tab in your Vercel project, or any Postgres
-     instance for local dev)
+   - `DATABASE_URL` / `DATABASE_URL_UNPOOLED` — from a Neon project (create
+     one free at neon.tech, or via Vercel's Storage → Marketplace Database
+     Providers → Neon), or any Postgres instance for local dev
    - `AUTH_SECRET` — `openssl rand -base64 32`
    - `NEXT_PUBLIC_APP_DOMAIN` — `localhost:3000` for local dev
    - `SUPER_ADMIN_EMAIL` / `SUPER_ADMIN_PASSWORD` — your platform admin login
@@ -57,8 +57,14 @@ students, and data — fully isolated from other schools on the platform.
 ## Deploying to Vercel
 
 1. Push this repo to GitHub (already done) and import it into Vercel.
-2. Add a **Vercel Postgres** database to the project (Storage tab) — this
-   auto-populates `POSTGRES_PRISMA_URL` / `POSTGRES_URL_NON_POOLING`.
+2. Add a Postgres database: Project → **Storage** tab → **Marketplace Database
+   Providers** → **Neon** → Connect. This auto-populates `DATABASE_URL`
+   (pooled) and `DATABASE_URL_UNPOOLED` (direct) for you. (Vercel's own
+   native "Vercel Postgres" product has been retired in favor of these
+   marketplace integrations — Neon is the standard Postgres choice here,
+   though Supabase or Prisma Postgres from the same marketplace list would
+   also work with this schema without changes, since they all expose a
+   standard Postgres connection string.)
 3. Set the remaining env vars from `.env.example` in Project Settings →
    Environment Variables (`AUTH_SECRET`, `NEXT_PUBLIC_APP_DOMAIN`,
    `SUPER_ADMIN_EMAIL`, `SUPER_ADMIN_PASSWORD`).
