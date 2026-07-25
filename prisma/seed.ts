@@ -28,7 +28,13 @@ async function main() {
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
-    console.log(`Super admin ${email} already exists.`);
+    if (process.argv.includes("--reset-password")) {
+      const passwordHash = await bcrypt.hash(password, 10);
+      await prisma.user.update({ where: { email }, data: { passwordHash, role: Role.SUPER_ADMIN } });
+      console.log(`Super admin ${email} password reset.`);
+      return;
+    }
+    console.log(`Super admin ${email} already exists. Run with --reset-password to update it.`);
     return;
   }
 
