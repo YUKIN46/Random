@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireOrgMember } from "@/lib/authz";
+import NewSlotForm from "./new-slot-form";
 
 const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"] as const;
 
@@ -12,8 +13,9 @@ export default async function TimetablePage({
 }) {
   const { slug } = await params;
   const sp = await searchParams;
-  await requireOrgMember(slug);
+  const user = await requireOrgMember(slug);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
+  const isAdmin = user.role === "ORG_ADMIN";
 
   const sections = await prisma.section.findMany({
     where: { organizationId: org.id },
@@ -21,18 +23,45 @@ export default async function TimetablePage({
   });
   const sectionId = sp.sectionId || sections[0]?.id;
 
-  const slots = sectionId
-    ? await prisma.timetableSlot.findMany({
-        where: { sectionId },
-        include: { subject: true, teacher: { include: { user: true } } },
-        orderBy: { startTime: "asc" },
-      })
-    : [];
+  const [slots, subjects, teachers] = await Promise.all([
+    sectionId
+      ? prisma.timetableSlot.findMany({
+          where: { sectionId },
+          include: { subject: true, teacher: { include: { user: true } } },
+          orderBy: { startTime: "asc" },
+        })
+      : Promise.resolve([]),
+    isAdmin ? prisma.subject.findMany({ where: { organizationId: org.id }, orderBy: { name: "asc" } }) : Promise.resolve([]),
+    isAdmin ? prisma.teacher.findMany({ where: { organizationId: org.id }, include: { user: true }, orderBy: { user: { name: "asc" } } }) : Promise.resolve([]),
+  ]);
 
   return (
     <div>
       <h1 className="text-2xl font-semibold mb-6">Timetable</h1>
-      <div className="grid grid-cols-7 gap-3">
+
+      <form className="mb-6">
+        <select
+          name="sectionId"
+          defaultValue={sectionId ?? ""}
+          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+          onChange={(e) => e.currentTarget.form?.submit()}
+        >
+          {sections.map((s) => (
+            <option key={s.id} value={s.id}>{s.schoolClass.name} - {s.name}</option>
+          ))}
+        </select>
+      </form>
+
+      {isAdmin && sectionId && (
+        <NewSlotForm
+          slug={slug}
+          sectionId={sectionId}
+          subjects={subjects.map((s) => ({ id: s.id, name: s.name }))}
+          teachers={teachers.map((t) => ({ id: t.id, name: t.user.name }))}
+        />
+      )}
+
+      <div className="grid grid-cols-7 gap-3 mt-6">
         {DAYS.map((day) => (
           <div key={day} className="bg-white border border-neutral-200 rounded-xl p-3">
             <p className="text-xs font-semibold text-neutral-500 mb-2">{day}</p>
@@ -51,10 +80,6 @@ export default async function TimetablePage({
           </div>
         ))}
       </div>
-      <p className="text-sm text-neutral-400 mt-6">
-        Timetable slots are managed by school admins. Slot creation UI coming in the next iteration —
-        rows can be added directly via the <code>TimetableSlot</code> model in the meantime.
-      </p>
     </div>
   );
 }

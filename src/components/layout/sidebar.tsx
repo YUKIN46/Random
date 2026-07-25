@@ -3,6 +3,7 @@ import type { SessionUser } from "@/lib/authz";
 
 const NAV: { href: string; label: string; roles: SessionUser["role"][] }[] = [
   { href: "dashboard", label: "Dashboard", roles: ["ORG_ADMIN", "TEACHER", "STUDENT", "PARENT", "ACCOUNTANT"] },
+  { href: "academics", label: "Academic Structure", roles: ["ORG_ADMIN"] },
   { href: "students", label: "Students", roles: ["ORG_ADMIN", "TEACHER"] },
   { href: "teachers", label: "Teachers", roles: ["ORG_ADMIN"] },
   { href: "attendance", label: "Attendance", roles: ["ORG_ADMIN", "TEACHER"] },
