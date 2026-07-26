@@ -33,29 +33,29 @@ export default async function AcademicsPage({
 
   return (
     <div className="space-y-10">
-      <h1 className="text-2xl font-semibold">Academic Structure</h1>
+      <h1 className="font-display text-2xl font-semibold">Academic Structure</h1>
 
       {/* Classes & Sections */}
       <section>
-        <h2 className="text-lg font-medium mb-3">Classes & Sections</h2>
+        <h2 className="font-display text-lg font-medium mb-3">Classes & Sections</h2>
         <AddClassForm slug={slug} />
         <div className="grid gap-4 mt-4 md:grid-cols-2">
           {classes.map((c) => (
-            <div key={c.id} className="bg-white border border-neutral-200 rounded-xl p-5">
+            <div key={c.id} className="bg-paper-raised border border-line rounded-xl p-5">
               <div className="flex items-center justify-between mb-3">
                 <p className="font-medium">{c.name}</p>
               </div>
               <ul className="space-y-1 mb-3">
                 {c.sections.map((s) => (
-                  <li key={s.id} className="text-sm text-neutral-600 flex justify-between">
+                  <li key={s.id} className="text-sm text-slate flex justify-between">
                     <span>Section {s.name}</span>
-                    <span className="text-neutral-400">
+                    <span className="text-slate">
                       {s.classTeacher ? s.classTeacher.user.name : "No class teacher"}
                     </span>
                   </li>
                 ))}
                 {c.sections.length === 0 && (
-                  <li className="text-sm text-neutral-400">No sections yet.</li>
+                  <li className="text-sm text-slate">No sections yet.</li>
                 )}
               </ul>
               <AddSectionForm
@@ -66,21 +66,21 @@ export default async function AcademicsPage({
             </div>
           ))}
           {classes.length === 0 && (
-            <p className="text-neutral-400 text-sm">No classes yet — add one above.</p>
+            <p className="text-slate text-sm">No classes yet — add one above.</p>
           )}
         </div>
       </section>
 
       {/* Subjects */}
       <section>
-        <h2 className="text-lg font-medium mb-3">Subjects</h2>
+        <h2 className="font-display text-lg font-medium mb-3">Subjects</h2>
         <AddSubjectForm
           slug={slug}
           teachers={teachers.map((t) => ({ id: t.id, name: t.user.name }))}
         />
-        <div className="bg-white border border-neutral-200 rounded-xl mt-4 overflow-hidden">
+        <div className="bg-paper-raised border border-line rounded-xl mt-4 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-neutral-50 text-left text-neutral-500">
+            <thead className="bg-paper text-left text-slate">
               <tr>
                 <th className="px-4 py-3 font-medium">Subject</th>
                 <th className="px-4 py-3 font-medium">Code</th>
@@ -89,9 +89,9 @@ export default async function AcademicsPage({
             </thead>
             <tbody>
               {subjects.map((s) => (
-                <tr key={s.id} className="border-t border-neutral-100">
+                <tr key={s.id} className="border-t border-line">
                   <td className="px-4 py-3">{s.name}</td>
-                  <td className="px-4 py-3 text-neutral-500">{s.code ?? "—"}</td>
+                  <td className="px-4 py-3 text-slate">{s.code ?? "—"}</td>
                   <td className="px-4 py-3">
                     {s.teacherLinks.map((tl) => tl.teacher.user.name).join(", ") || "—"}
                   </td>
@@ -99,7 +99,7 @@ export default async function AcademicsPage({
               ))}
               {subjects.length === 0 && (
                 <tr>
-                  <td colSpan={3} className="px-4 py-6 text-center text-neutral-400">
+                  <td colSpan={3} className="px-4 py-6 text-center text-slate">
                     No subjects yet.
                   </td>
                 </tr>

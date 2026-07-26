@@ -30,8 +30,8 @@ export default async function DashboardPage({
   if (!student) {
     return (
       <div>
-        <h1 className="text-2xl font-semibold mb-2">Welcome</h1>
-        <p className="text-neutral-500">
+        <h1 className="font-display text-2xl font-semibold mb-2">Welcome</h1>
+        <p className="text-slate">
           No student profile is linked to your account yet. Contact your school
           admin if this seems wrong.
         </p>
@@ -47,30 +47,30 @@ export default async function DashboardPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-1">Welcome back</h1>
-      <p className="text-neutral-500 mb-6">
+      <h1 className="font-display text-2xl font-semibold mb-1">Welcome back</h1>
+      <p className="text-slate mb-6">
         {student.section ? `${student.section.schoolClass.name} - ${student.section.name}` : "No section assigned"}
       </p>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white border border-neutral-200 rounded-xl p-5">
-          <p className="text-sm text-neutral-500">Attendance (last 30 records)</p>
-          <p className="text-3xl font-semibold mt-1">{attendancePct !== null ? `${attendancePct}%` : "—"}</p>
+        <div className="bg-paper-raised border border-line rounded-xl p-5">
+          <p className="text-sm text-slate">Attendance (last 30 records)</p>
+          <p className="font-mono text-3xl font-semibold mt-1 text-ink">{attendancePct !== null ? `${attendancePct}%` : "—"}</p>
         </div>
-        <div className="bg-white border border-neutral-200 rounded-xl p-5">
-          <p className="text-sm text-neutral-500">Outstanding fees</p>
-          <p className="text-3xl font-semibold mt-1">${totalDue.toFixed(2)}</p>
+        <div className="bg-paper-raised border border-line rounded-xl p-5">
+          <p className="text-sm text-slate">Outstanding fees</p>
+          <p className="font-mono text-3xl font-semibold mt-1 text-ink">${totalDue.toFixed(2)}</p>
         </div>
-        <div className="bg-white border border-neutral-200 rounded-xl p-5">
-          <p className="text-sm text-neutral-500">Recent exams</p>
-          <p className="text-3xl font-semibold mt-1">{student.examResults.length}</p>
+        <div className="bg-paper-raised border border-line rounded-xl p-5">
+          <p className="text-sm text-slate">Recent exams</p>
+          <p className="font-mono text-3xl font-semibold mt-1 text-ink">{student.examResults.length}</p>
         </div>
       </div>
 
-      <h2 className="text-lg font-medium mb-3">Recent exam results</h2>
-      <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
+      <h2 className="font-display text-lg font-medium mb-3">Recent exam results</h2>
+      <div className="bg-paper-raised border border-line rounded-xl overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-left text-neutral-500">
+          <thead className="bg-paper text-left text-slate">
             <tr>
               <th className="px-4 py-3 font-medium">Exam</th>
               <th className="px-4 py-3 font-medium">Subject</th>
@@ -80,7 +80,7 @@ export default async function DashboardPage({
           </thead>
           <tbody>
             {student.examResults.map((r) => (
-              <tr key={r.id} className="border-t border-neutral-100">
+              <tr key={r.id} className="border-t border-line">
                 <td className="px-4 py-3">{r.exam.name}</td>
                 <td className="px-4 py-3">{r.exam.subject.name}</td>
                 <td className="px-4 py-3">{r.marksObtained} / {r.exam.maxMarks}</td>
@@ -89,7 +89,7 @@ export default async function DashboardPage({
             ))}
             {student.examResults.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-neutral-400">No results yet.</td>
+                <td colSpan={4} className="px-4 py-6 text-center text-slate">No results yet.</td>
               </tr>
             )}
           </tbody>
@@ -122,12 +122,12 @@ async function StaffDashboard({ organizationId }: { organizationId: string }) {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-6">Dashboard</h1>
+      <h1 className="font-display text-2xl font-semibold mb-6">Dashboard</h1>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {stats.map((s) => (
-          <div key={s.label} className="bg-white border border-neutral-200 rounded-xl p-5">
-            <p className="text-sm text-neutral-500">{s.label}</p>
-            <p className="text-3xl font-semibold mt-1">{s.value}</p>
+          <div key={s.label} className="bg-paper-raised border border-line rounded-xl p-5">
+            <p className="text-sm text-slate">{s.label}</p>
+            <p className="font-mono text-3xl font-semibold mt-1 text-ink">{s.value}</p>
           </div>
         ))}
       </div>

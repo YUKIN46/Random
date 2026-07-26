@@ -41,9 +41,9 @@ export default function ResultsEntry({
 
   return (
     <div>
-      <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
+      <div className="bg-paper-raised border border-line rounded-xl overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-left text-neutral-500">
+          <thead className="bg-paper text-left text-slate">
             <tr>
               <th className="px-4 py-3 font-medium">Student</th>
               <th className="px-4 py-3 font-medium">Marks (out of {maxMarks})</th>
@@ -51,7 +51,7 @@ export default function ResultsEntry({
           </thead>
           <tbody>
             {local.map((s) => (
-              <tr key={s.id} className="border-t border-neutral-100">
+              <tr key={s.id} className="border-t border-line">
                 <td className="px-4 py-3">{s.name}</td>
                 <td className="px-4 py-3">
                   <input
@@ -60,14 +60,14 @@ export default function ResultsEntry({
                     max={maxMarks}
                     value={s.marksObtained}
                     onChange={(e) => setMarks(s.id, e.target.value)}
-                    className="w-24 rounded-lg border border-neutral-300 px-2 py-1 text-sm"
+                    className="w-24 rounded-lg border border-line px-2 py-1 text-sm"
                   />
                 </td>
               </tr>
             ))}
             {local.length === 0 && (
               <tr>
-                <td colSpan={2} className="px-4 py-6 text-center text-neutral-400">
+                <td colSpan={2} className="px-4 py-6 text-center text-slate">
                   No students found.
                 </td>
               </tr>
@@ -79,7 +79,7 @@ export default function ResultsEntry({
         <button
           onClick={save}
           disabled={saving}
-          className="mt-4 rounded-lg bg-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+          className="mt-4 rounded-lg bg-ink text-paper px-4 py-2 text-sm font-medium disabled:opacity-50"
         >
           {saving ? "Saving…" : "Save results"}
         </button>

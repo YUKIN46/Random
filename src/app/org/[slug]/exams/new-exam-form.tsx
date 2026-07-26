@@ -38,30 +38,30 @@ export default function NewExamForm({
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)} className="rounded-lg bg-neutral-900 text-white px-4 py-2 text-sm font-medium">
+      <button onClick={() => setOpen(true)} className="rounded-lg bg-ink text-paper px-4 py-2 text-sm font-medium">
         + New exam
       </button>
     );
   }
 
   return (
-    <form onSubmit={submit} className="bg-white border border-neutral-200 rounded-xl p-5 grid grid-cols-2 md:grid-cols-5 gap-3">
-      <select required value={form.subjectId} onChange={(e) => setForm({ ...form, subjectId: e.target.value })} className="rounded-lg border border-neutral-300 px-3 py-2 text-sm">
+    <form onSubmit={submit} className="bg-paper-raised border border-line rounded-xl p-5 grid grid-cols-2 md:grid-cols-5 gap-3">
+      <select required value={form.subjectId} onChange={(e) => setForm({ ...form, subjectId: e.target.value })} className="rounded-lg border border-line px-3 py-2 text-sm">
         <option value="">Subject</option>
         {subjects.map((s) => (
           <option key={s.id} value={s.id}>{s.name}</option>
         ))}
       </select>
-      <input required placeholder="Exam name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="rounded-lg border border-neutral-300 px-3 py-2 text-sm" />
-      <input required type="date" value={form.examDate} onChange={(e) => setForm({ ...form, examDate: e.target.value })} className="rounded-lg border border-neutral-300 px-3 py-2 text-sm" />
-      <input type="number" placeholder="Max marks" value={form.maxMarks} onChange={(e) => setForm({ ...form, maxMarks: e.target.value })} className="rounded-lg border border-neutral-300 px-3 py-2 text-sm" />
-      <input type="number" placeholder="Pass marks" value={form.passMarks} onChange={(e) => setForm({ ...form, passMarks: e.target.value })} className="rounded-lg border border-neutral-300 px-3 py-2 text-sm" />
-      {error && <p className="col-span-2 md:col-span-5 text-red-600 text-sm">{error}</p>}
+      <input required placeholder="Exam name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="rounded-lg border border-line px-3 py-2 text-sm" />
+      <input required type="date" value={form.examDate} onChange={(e) => setForm({ ...form, examDate: e.target.value })} className="rounded-lg border border-line px-3 py-2 text-sm" />
+      <input type="number" placeholder="Max marks" value={form.maxMarks} onChange={(e) => setForm({ ...form, maxMarks: e.target.value })} className="rounded-lg border border-line px-3 py-2 text-sm" />
+      <input type="number" placeholder="Pass marks" value={form.passMarks} onChange={(e) => setForm({ ...form, passMarks: e.target.value })} className="rounded-lg border border-line px-3 py-2 text-sm" />
+      {error && <p className="col-span-2 md:col-span-5 text-ledger-red text-sm">{error}</p>}
       <div className="col-span-2 md:col-span-5 flex gap-2">
-        <button type="submit" disabled={loading} className="rounded-lg bg-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50">
+        <button type="submit" disabled={loading} className="rounded-lg bg-ink text-paper px-4 py-2 text-sm font-medium disabled:opacity-50">
           {loading ? "Saving…" : "Create"}
         </button>
-        <button type="button" onClick={() => setOpen(false)} className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium">
+        <button type="button" onClick={() => setOpen(false)} className="rounded-lg border border-line px-4 py-2 text-sm font-medium">
           Cancel
         </button>
       </div>

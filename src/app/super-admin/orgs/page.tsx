@@ -1,13 +1,12 @@
-import Link from "next/link";
 import { requireSuperAdmin } from "@/lib/authz";
 import { prisma } from "@/lib/prisma";
 import OrgStatusActions from "./org-status-actions";
 
 const STATUS_COLORS: Record<string, string> = {
-  APPROVED: "bg-emerald-50 text-emerald-700",
-  PENDING: "bg-amber-50 text-amber-700",
-  REJECTED: "bg-neutral-100 text-neutral-500",
-  SUSPENDED: "bg-red-50 text-red-700",
+  APPROVED: "bg-chalk/10 text-chalk",
+  PENDING: "bg-brass/10 text-brass-dark",
+  REJECTED: "bg-line/60 text-slate",
+  SUSPENDED: "bg-ledger-red/10 text-ledger-red",
 };
 
 export default async function AllOrgsPage() {
@@ -19,34 +18,30 @@ export default async function AllOrgsPage() {
   });
 
   return (
-    <main className="max-w-5xl mx-auto py-12 px-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold">All schools</h1>
-        <Link href="/super-admin/pending" className="text-sm underline text-neutral-600">
-          View pending applications
-        </Link>
-      </div>
-      <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
+    <main className="max-w-5xl mx-auto py-12 px-5 sm:px-8">
+      <p className="font-mono text-xs uppercase tracking-[0.18em] text-brass">Directory</p>
+      <h1 className="mt-2 font-display text-2xl font-semibold text-ink">All schools</h1>
+      <div className="mt-8 overflow-x-auto rounded-lg border border-line bg-paper-raised">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-left text-neutral-500">
+          <thead className="bg-paper text-left text-slate">
             <tr>
-              <th className="px-4 py-3 font-medium">School</th>
-              <th className="px-4 py-3 font-medium">Subdomain</th>
-              <th className="px-4 py-3 font-medium">Students</th>
-              <th className="px-4 py-3 font-medium">Status</th>
-              <th className="px-4 py-3 font-medium" />
+              <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider font-medium">School</th>
+              <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider font-medium">Subdomain</th>
+              <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider font-medium">Students</th>
+              <th className="px-4 py-3 font-mono text-xs uppercase tracking-wider font-medium">Status</th>
+              <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody>
             {orgs.map((org) => (
-              <tr key={org.id} className="border-t border-neutral-100">
-                <td className="px-4 py-3">{org.name}</td>
-                <td className="px-4 py-3 text-neutral-500">
+              <tr key={org.id} className="border-t border-line">
+                <td className="px-4 py-3 text-ink">{org.name}</td>
+                <td className="px-4 py-3 font-mono text-xs text-slate">
                   {org.slug}.{process.env.NEXT_PUBLIC_APP_DOMAIN}
                 </td>
-                <td className="px-4 py-3">{org._count.students}</td>
+                <td className="px-4 py-3 text-ink">{org._count.students}</td>
                 <td className="px-4 py-3">
-                  <span className={`px-2 py-1 rounded-md text-xs font-medium ${STATUS_COLORS[org.status]}`}>
+                  <span className={`rounded-md px-2 py-1 font-mono text-xs font-medium ${STATUS_COLORS[org.status]}`}>
                     {org.status}
                   </span>
                 </td>
@@ -59,7 +54,7 @@ export default async function AllOrgsPage() {
             ))}
             {orgs.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-neutral-400">
+                <td colSpan={5} className="px-4 py-6 text-center text-slate">
                   No schools yet.
                 </td>
               </tr>

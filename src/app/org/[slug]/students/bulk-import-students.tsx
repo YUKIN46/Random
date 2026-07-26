@@ -88,7 +88,7 @@ export default function BulkImportStudents({ slug }: { slug: string }) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium"
+        className="rounded-lg border border-line px-4 py-2 text-sm font-medium"
       >
         Bulk import (CSV)
       </button>
@@ -96,21 +96,21 @@ export default function BulkImportStudents({ slug }: { slug: string }) {
   }
 
   return (
-    <div className="bg-white border border-neutral-200 rounded-xl p-5">
-      <p className="text-sm text-neutral-600 mb-3">
+    <div className="bg-paper-raised border border-line rounded-xl p-5">
+      <p className="text-sm text-slate mb-3">
         CSV with headers <code>name,email,section,admissionNo</code> — <code>section</code>{" "}
         should match an existing section like <code>Grade 8 - A</code> and{" "}
         <code>admissionNo</code> is optional.
       </p>
       <input type="file" accept=".csv" onChange={handleFile} className="text-sm mb-3" />
       {fileName && (
-        <p className="text-sm text-neutral-500 mb-3">
+        <p className="text-sm text-slate mb-3">
           {rows.length} valid row(s) parsed from <strong>{fileName}</strong>.
         </p>
       )}
-      {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
+      {error && <p className="text-ledger-red text-sm mb-3">{error}</p>}
       {summary && (
-        <p className="text-emerald-700 text-sm mb-3">
+        <p className="text-chalk text-sm mb-3">
           Imported {summary.created} student(s); skipped {summary.skipped} (duplicate emails).
         </p>
       )}
@@ -118,7 +118,7 @@ export default function BulkImportStudents({ slug }: { slug: string }) {
         <button
           onClick={submit}
           disabled={loading || rows.length === 0}
-          className="rounded-lg bg-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+          className="rounded-lg bg-ink text-paper px-4 py-2 text-sm font-medium disabled:opacity-50"
         >
           {loading ? "Importing…" : `Import ${rows.length || ""} students`}
         </button>
@@ -129,7 +129,7 @@ export default function BulkImportStudents({ slug }: { slug: string }) {
             setFileName("");
             setSummary(null);
           }}
-          className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium"
+          className="rounded-lg border border-line px-4 py-2 text-sm font-medium"
         >
           Close
         </button>

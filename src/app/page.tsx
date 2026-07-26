@@ -1,13 +1,17 @@
 import Link from "next/link";
+import { getPlatformSettings } from "@/lib/platform-settings";
 
-export default function Home() {
+export default async function Home() {
+  const settings = await getPlatformSettings();
+
   return (
     <div className="flex-1">
       {/* ── Nav ─────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-30 border-b border-line/70 bg-paper/90 backdrop-blur">
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
           <span className="font-display text-lg font-semibold tracking-tight text-ink">
-            Ledger<span className="text-brass">.</span>
+            {settings.siteName}
+            <span className="text-brass">.</span>
           </span>
           <div className="flex items-center gap-3 sm:gap-5">
             <Link
@@ -20,7 +24,7 @@ export default function Home() {
               href="/apply"
               className="rounded-md bg-ink px-3.5 py-2 font-mono text-xs uppercase tracking-wider text-paper hover:bg-ink-soft transition-colors sm:px-4"
             >
-              Register your school
+              {settings.ctaLabel}
             </Link>
           </div>
         </nav>
@@ -32,22 +36,20 @@ export default function Home() {
           {/* Copy */}
           <div className="hero-copy">
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-brass">
-              Form 24-B · School Registration
+              {settings.heroEyebrow}
             </p>
             <h1 className="mt-4 max-w-xl font-display text-[2.6rem] leading-[1.08] font-semibold tracking-tight text-ink sm:text-6xl">
-              One ledger for the whole school.
+              {settings.heroHeadline}
             </h1>
             <p className="mt-5 max-w-md text-[1.05rem] leading-relaxed text-slate">
-              Attendance, grades, timetables, fees, and notices — kept the way a
-              front office actually keeps them, organized by school. Every
-              organization gets its own address and its own private records.
+              {settings.heroSubhead}
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Link
                 href="/apply"
                 className="rounded-md bg-brass px-6 py-3.5 text-center font-mono text-sm uppercase tracking-wider text-paper transition-colors hover:bg-brass-dark"
               >
-                Register your school
+                {settings.ctaLabel}
               </Link>
               <Link
                 href="/login"
@@ -181,7 +183,7 @@ export default function Home() {
             href="/apply"
             className="shrink-0 rounded-md bg-brass px-7 py-3.5 font-mono text-sm uppercase tracking-wider text-paper transition-colors hover:bg-brass-dark"
           >
-            Register your school
+            {settings.ctaLabel}
           </Link>
         </div>
       </section>
@@ -189,12 +191,20 @@ export default function Home() {
       {/* ── Footer ──────────────────────────────────────────────────── */}
       <footer className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-8 text-sm text-slate sm:flex-row sm:items-center sm:justify-between sm:px-8">
-          <span className="font-display text-ink">Ledger</span>
+          <span className="font-display text-ink">{settings.siteName}</span>
           <span className="font-mono text-xs">
             Already have a school here?{" "}
             <Link href="/login" className="text-ink underline underline-offset-2">
               Log in
             </Link>
+            {settings.supportEmail && (
+              <>
+                {" · "}
+                <a href={`mailto:${settings.supportEmail}`} className="text-ink underline underline-offset-2">
+                  {settings.supportEmail}
+                </a>
+              </>
+            )}
           </span>
         </div>
       </footer>

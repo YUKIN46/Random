@@ -27,7 +27,7 @@ export default async function StudentsPage({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold">Students</h1>
+        <h1 className="font-display text-2xl font-semibold">Students</h1>
       </div>
 
       <div className="flex gap-2">
@@ -38,9 +38,9 @@ export default async function StudentsPage({
         <BulkImportStudents slug={slug} />
       </div>
 
-      <div className="bg-white border border-neutral-200 rounded-xl mt-6 overflow-hidden">
+      <div className="bg-paper-raised border border-line rounded-xl mt-6 overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-left text-neutral-500">
+          <thead className="bg-paper text-left text-slate">
             <tr>
               <th className="px-4 py-3 font-medium">Name</th>
               <th className="px-4 py-3 font-medium">Email</th>
@@ -50,9 +50,9 @@ export default async function StudentsPage({
           </thead>
           <tbody>
             {students.map((s) => (
-              <tr key={s.id} className="border-t border-neutral-100">
+              <tr key={s.id} className="border-t border-line">
                 <td className="px-4 py-3">{s.user.name}</td>
-                <td className="px-4 py-3 text-neutral-500">{s.user.email}</td>
+                <td className="px-4 py-3 text-slate">{s.user.email}</td>
                 <td className="px-4 py-3">
                   {s.section ? `${s.section.schoolClass.name} - ${s.section.name}` : "—"}
                 </td>
@@ -61,7 +61,7 @@ export default async function StudentsPage({
             ))}
             {students.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-neutral-400">
+                <td colSpan={4} className="px-4 py-6 text-center text-slate">
                   No students yet.
                 </td>
               </tr>

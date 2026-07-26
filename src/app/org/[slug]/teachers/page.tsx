@@ -19,11 +19,11 @@ export default async function TeachersPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-6">Teachers</h1>
+      <h1 className="font-display text-2xl font-semibold mb-6">Teachers</h1>
       <AddTeacherForm slug={slug} />
-      <div className="bg-white border border-neutral-200 rounded-xl mt-6 overflow-hidden">
+      <div className="bg-paper-raised border border-line rounded-xl mt-6 overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-left text-neutral-500">
+          <thead className="bg-paper text-left text-slate">
             <tr>
               <th className="px-4 py-3 font-medium">Name</th>
               <th className="px-4 py-3 font-medium">Email</th>
@@ -33,9 +33,9 @@ export default async function TeachersPage({
           </thead>
           <tbody>
             {teachers.map((t) => (
-              <tr key={t.id} className="border-t border-neutral-100">
+              <tr key={t.id} className="border-t border-line">
                 <td className="px-4 py-3">{t.user.name}</td>
-                <td className="px-4 py-3 text-neutral-500">{t.user.email}</td>
+                <td className="px-4 py-3 text-slate">{t.user.email}</td>
                 <td className="px-4 py-3">{t.employeeCode ?? "—"}</td>
                 <td className="px-4 py-3">
                   {t.subjects.map((s) => s.subject.name).join(", ") || "—"}
@@ -44,7 +44,7 @@ export default async function TeachersPage({
             ))}
             {teachers.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-neutral-400">
+                <td colSpan={4} className="px-4 py-6 text-center text-slate">
                   No teachers yet.
                 </td>
               </tr>

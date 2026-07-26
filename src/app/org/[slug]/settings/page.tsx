@@ -13,7 +13,7 @@ export default async function SettingsPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-6">School Settings</h1>
+      <h1 className="font-display text-2xl font-semibold mb-6">School Settings</h1>
       <div className="max-w-lg">
         <SettingsForm
           slug={slug}
@@ -26,12 +26,12 @@ export default async function SettingsPage({
           }}
         />
       </div>
-      <div className="max-w-lg mt-8 bg-neutral-50 border border-neutral-200 rounded-xl p-5">
-        <p className="text-sm text-neutral-500">Subdomain</p>
+      <div className="max-w-lg mt-8 bg-paper border border-line rounded-xl p-5">
+        <p className="text-sm text-slate">Subdomain</p>
         <p className="font-medium">
           {org.slug}.{process.env.NEXT_PUBLIC_APP_DOMAIN}
         </p>
-        <p className="text-xs text-neutral-400 mt-1">
+        <p className="text-xs text-slate mt-1">
           Contact platform support to change your subdomain.
         </p>
       </div>

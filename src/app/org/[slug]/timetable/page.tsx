@@ -37,13 +37,13 @@ export default async function TimetablePage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-6">Timetable</h1>
+      <h1 className="font-display text-2xl font-semibold mb-6">Timetable</h1>
 
       <form className="mb-6">
         <select
           name="sectionId"
           defaultValue={sectionId ?? ""}
-          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+          className="rounded-lg border border-line px-3 py-2 text-sm"
           onChange={(e) => e.currentTarget.form?.submit()}
         >
           {sections.map((s) => (
@@ -63,18 +63,18 @@ export default async function TimetablePage({
 
       <div className="grid grid-cols-7 gap-3 mt-6">
         {DAYS.map((day) => (
-          <div key={day} className="bg-white border border-neutral-200 rounded-xl p-3">
-            <p className="text-xs font-semibold text-neutral-500 mb-2">{day}</p>
+          <div key={day} className="bg-paper-raised border border-line rounded-xl p-3">
+            <p className="text-xs font-semibold text-slate mb-2">{day}</p>
             <div className="space-y-2">
               {slots.filter((s) => s.day === day).map((s) => (
-                <div key={s.id} className="text-xs bg-neutral-50 rounded-md p-2">
+                <div key={s.id} className="text-xs bg-paper rounded-md p-2">
                   <p className="font-medium">{s.subject.name}</p>
-                  <p className="text-neutral-500">{s.startTime}–{s.endTime}</p>
-                  <p className="text-neutral-400">{s.teacher.user.name}</p>
+                  <p className="text-slate">{s.startTime}–{s.endTime}</p>
+                  <p className="text-slate">{s.teacher.user.name}</p>
                 </div>
               ))}
               {slots.filter((s) => s.day === day).length === 0 && (
-                <p className="text-xs text-neutral-300">—</p>
+                <p className="text-xs text-slate">—</p>
               )}
             </div>
           </div>

@@ -35,16 +35,16 @@ export default function AddClassForm({ slug }: { slug: string }) {
         placeholder="e.g. Grade 8"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+        className="rounded-lg border border-line px-3 py-2 text-sm"
       />
       <button
         type="submit"
         disabled={loading}
-        className="rounded-lg bg-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+        className="rounded-lg bg-ink text-paper px-4 py-2 text-sm font-medium disabled:opacity-50"
       >
         {loading ? "Adding…" : "+ Add class"}
       </button>
-      {error && <p className="text-red-600 text-sm self-center">{error}</p>}
+      {error && <p className="text-ledger-red text-sm self-center">{error}</p>}
     </form>
   );
 }

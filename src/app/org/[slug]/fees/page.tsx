@@ -33,7 +33,7 @@ export default async function FeesPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-6">Fees & Billing</h1>
+      <h1 className="font-display text-2xl font-semibold mb-6">Fees & Billing</h1>
 
       {isStaff && (
         <NewInvoiceForm
@@ -42,9 +42,9 @@ export default async function FeesPage({
         />
       )}
 
-      <div className="bg-white border border-neutral-200 rounded-xl mt-6 overflow-hidden">
+      <div className="bg-paper-raised border border-line rounded-xl mt-6 overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-left text-neutral-500">
+          <thead className="bg-paper text-left text-slate">
             <tr>
               <th className="px-4 py-3 font-medium">Student</th>
               <th className="px-4 py-3 font-medium">Amount due</th>
@@ -56,7 +56,7 @@ export default async function FeesPage({
           </thead>
           <tbody>
             {invoices.map((inv) => (
-              <tr key={inv.id} className="border-t border-neutral-100">
+              <tr key={inv.id} className="border-t border-line">
                 <td className="px-4 py-3">{inv.student.user.name}</td>
                 <td className="px-4 py-3">${inv.amountDue.toFixed(2)}</td>
                 <td className="px-4 py-3">${inv.amountPaid.toFixed(2)}</td>
@@ -73,7 +73,7 @@ export default async function FeesPage({
             ))}
             {invoices.length === 0 && (
               <tr>
-                <td colSpan={isStaff ? 6 : 5} className="px-4 py-6 text-center text-neutral-400">
+                <td colSpan={isStaff ? 6 : 5} className="px-4 py-6 text-center text-slate">
                   No invoices yet.
                 </td>
               </tr>
@@ -87,11 +87,11 @@ export default async function FeesPage({
 
 function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
-    PAID: "bg-emerald-50 text-emerald-700",
-    UNPAID: "bg-amber-50 text-amber-700",
-    PARTIAL: "bg-blue-50 text-blue-700",
-    OVERDUE: "bg-red-50 text-red-700",
-    CANCELLED: "bg-neutral-100 text-neutral-500",
+    PAID: "bg-chalk/10 text-chalk",
+    UNPAID: "bg-brass/10 text-brass-dark",
+    PARTIAL: "bg-ink/5 text-ink-soft",
+    OVERDUE: "bg-ledger-red/5 text-ledger-red",
+    CANCELLED: "bg-line/60 text-slate",
   };
   return (
     <span className={`px-2 py-1 rounded-md text-xs font-medium ${colors[status] ?? ""}`}>

@@ -12,6 +12,22 @@ datasource db {
 }
 
 // ─────────────────────────────────────────────
+// PLATFORM-WIDE SETTINGS (singleton, id fixed to "singleton")
+// ─────────────────────────────────────────────
+
+model PlatformSettings {
+  id             String   @id @default("singleton")
+  siteName       String   @default("Ledger")
+  heroEyebrow    String   @default("Form 24-B · School Registration")
+  heroHeadline   String   @default("One ledger for the whole school.")
+  heroSubhead    String   @default("Attendance, grades, timetables, fees, and notices — kept the way a front office actually keeps them, organized by school. Every organization gets its own address and its own private records.")
+  ctaLabel       String   @default("Register your school")
+  supportEmail   String?
+  updatedAt      DateTime @updatedAt
+  updatedById    String?
+}
+
+// ─────────────────────────────────────────────
 // PLATFORM / TENANCY
 // ─────────────────────────────────────────────
 

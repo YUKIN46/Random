@@ -25,7 +25,7 @@ export default function OrgStatusActions({
     <button
       onClick={act}
       disabled={loading}
-      className="text-xs font-medium text-neutral-900 underline disabled:opacity-50"
+      className="font-mono text-xs uppercase tracking-wider text-ink underline underline-offset-2 disabled:opacity-50"
     >
       {loading ? "…" : status === "APPROVED" ? "Suspend" : "Reactivate"}
     </button>

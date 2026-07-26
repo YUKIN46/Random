@@ -27,8 +27,8 @@ export default async function EnterResultsPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-1">Enter results — {exam.name}</h1>
-      <p className="text-neutral-500 mb-6">{exam.subject.name} · Max marks {exam.maxMarks}</p>
+      <h1 className="font-display text-2xl font-semibold mb-1">Enter results — {exam.name}</h1>
+      <p className="text-slate mb-6">{exam.subject.name} · Max marks {exam.maxMarks}</p>
       <ResultsEntry
         slug={slug}
         examId={examId}

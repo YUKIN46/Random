@@ -19,20 +19,20 @@ export default async function NotesPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-6">Notes & Announcements</h1>
+      <h1 className="font-display text-2xl font-semibold mb-6">Notes & Announcements</h1>
       <NewNoteForm slug={slug} />
       <div className="space-y-3 mt-6">
         {notes.map((n) => (
-          <div key={n.id} className="bg-white border border-neutral-200 rounded-xl p-5">
+          <div key={n.id} className="bg-paper-raised border border-line rounded-xl p-5">
             <div className="flex items-center justify-between">
               <p className="font-medium">{n.title}</p>
-              <span className="text-xs text-neutral-400">{n.visibility}</span>
+              <span className="text-xs text-slate">{n.visibility}</span>
             </div>
-            <p className="text-sm text-neutral-600 mt-1 whitespace-pre-wrap">{n.content}</p>
-            <p className="text-xs text-neutral-400 mt-2">{n.createdAt.toLocaleString()}</p>
+            <p className="text-sm text-slate mt-1 whitespace-pre-wrap">{n.content}</p>
+            <p className="text-xs text-slate mt-2">{n.createdAt.toLocaleString()}</p>
           </div>
         ))}
-        {notes.length === 0 && <p className="text-neutral-400">No notes yet.</p>}
+        {notes.length === 0 && <p className="text-slate">No notes yet.</p>}
       </div>
     </div>
   );

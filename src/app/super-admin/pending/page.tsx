@@ -12,28 +12,26 @@ export default async function PendingOrgsPage() {
   });
 
   return (
-    <main className="max-w-4xl mx-auto py-12 px-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold">Pending school applications</h1>
-        <a href="/super-admin/orgs" className="text-sm underline text-neutral-600">
-          View all schools
-        </a>
-      </div>
+    <main className="max-w-4xl mx-auto py-12 px-5 sm:px-8">
+      <p className="font-mono text-xs uppercase tracking-[0.18em] text-brass">Review queue</p>
+      <h1 className="mt-2 font-display text-2xl font-semibold text-ink">
+        Pending school applications
+      </h1>
       {pending.length === 0 ? (
-        <p className="text-neutral-500">No applications waiting on review.</p>
+        <p className="mt-8 text-slate">No applications waiting on review.</p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="mt-8 space-y-4">
           {pending.map((org) => (
             <li
               key={org.id}
-              className="border border-neutral-200 rounded-xl p-5 flex items-center justify-between"
+              className="flex flex-col gap-4 rounded-lg border border-line bg-paper-raised p-5 sm:flex-row sm:items-center sm:justify-between"
             >
               <div>
-                <p className="font-medium">{org.name}</p>
-                <p className="text-sm text-neutral-500">
+                <p className="font-medium text-ink">{org.name}</p>
+                <p className="mt-0.5 font-mono text-xs text-slate">
                   {org.slug}.{process.env.NEXT_PUBLIC_APP_DOMAIN} · {org.contactEmail}
                 </p>
-                <p className="text-xs text-neutral-400 mt-1">
+                <p className="mt-1 text-xs text-slate">
                   Applied {org.createdAt.toLocaleDateString()}
                 </p>
               </div>

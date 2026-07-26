@@ -42,7 +42,7 @@ export default function AddSectionForm({
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)} className="text-xs font-medium text-neutral-900 underline">
+      <button onClick={() => setOpen(true)} className="text-xs font-medium text-ink underline">
         + Add section
       </button>
     );
@@ -55,24 +55,24 @@ export default function AddSectionForm({
         placeholder="e.g. A"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="w-full rounded-lg border border-neutral-300 px-3 py-1.5 text-sm"
+        className="w-full rounded-lg border border-line px-3 py-1.5 text-sm"
       />
       <select
         value={classTeacherId}
         onChange={(e) => setClassTeacherId(e.target.value)}
-        className="w-full rounded-lg border border-neutral-300 px-3 py-1.5 text-sm"
+        className="w-full rounded-lg border border-line px-3 py-1.5 text-sm"
       >
         <option value="">No class teacher</option>
         {teachers.map((t) => (
           <option key={t.id} value={t.id}>{t.name}</option>
         ))}
       </select>
-      {error && <p className="text-red-600 text-xs">{error}</p>}
+      {error && <p className="text-ledger-red text-xs">{error}</p>}
       <div className="flex gap-2">
-        <button type="submit" disabled={loading} className="rounded-lg bg-neutral-900 text-white px-3 py-1.5 text-xs font-medium disabled:opacity-50">
+        <button type="submit" disabled={loading} className="rounded-lg bg-ink text-paper px-3 py-1.5 text-xs font-medium disabled:opacity-50">
           {loading ? "Saving…" : "Save"}
         </button>
-        <button type="button" onClick={() => setOpen(false)} className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium">
+        <button type="button" onClick={() => setOpen(false)} className="rounded-lg border border-line px-3 py-1.5 text-xs font-medium">
           Cancel
         </button>
       </div>

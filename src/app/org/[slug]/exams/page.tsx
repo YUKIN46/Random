@@ -31,7 +31,7 @@ export default async function ExamsPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-6">Exams & Grades</h1>
+      <h1 className="font-display text-2xl font-semibold mb-6">Exams & Grades</h1>
 
       {isStaff && (
         <NewExamForm slug={slug} subjects={subjects.map((s) => ({ id: s.id, name: s.name }))} />
@@ -39,25 +39,25 @@ export default async function ExamsPage({
 
       <div className="space-y-4 mt-6">
         {exams.map((exam) => (
-          <div key={exam.id} className="bg-white border border-neutral-200 rounded-xl p-5">
+          <div key={exam.id} className="bg-paper-raised border border-line rounded-xl p-5">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <p className="font-medium">{exam.name}</p>
-                <p className="text-sm text-neutral-500">
+                <p className="text-sm text-slate">
                   {exam.subject.name} · {exam.examDate.toLocaleDateString()} · Max {exam.maxMarks}
                 </p>
               </div>
               {isStaff && (
                 <Link
                   href={`/org/${slug}/exams/${exam.id}/enter-results`}
-                  className="text-xs font-medium text-neutral-900 underline"
+                  className="text-xs font-medium text-ink underline"
                 >
                   Enter results
                 </Link>
               )}
             </div>
             <table className="w-full text-sm">
-              <thead className="text-left text-neutral-400">
+              <thead className="text-left text-slate">
                 <tr>
                   <th className="py-1 font-medium">Student</th>
                   <th className="py-1 font-medium">Marks</th>
@@ -68,7 +68,7 @@ export default async function ExamsPage({
                 {exam.results
                   .filter((r) => user.role !== "STUDENT" || r.student.userId === user.id)
                   .map((r) => (
-                    <tr key={r.id} className="border-t border-neutral-100">
+                    <tr key={r.id} className="border-t border-line">
                       <td className="py-1.5">{r.student.user.name}</td>
                       <td className="py-1.5">{r.marksObtained} / {exam.maxMarks}</td>
                       <td className="py-1.5">{r.grade ?? "—"}</td>
@@ -76,14 +76,14 @@ export default async function ExamsPage({
                   ))}
                 {exam.results.length === 0 && (
                   <tr>
-                    <td colSpan={3} className="py-3 text-center text-neutral-400">No results entered yet.</td>
+                    <td colSpan={3} className="py-3 text-center text-slate">No results entered yet.</td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
         ))}
-        {exams.length === 0 && <p className="text-neutral-400">No exams scheduled yet.</p>}
+        {exams.length === 0 && <p className="text-slate">No exams scheduled yet.</p>}
       </div>
     </div>
   );

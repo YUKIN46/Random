@@ -35,7 +35,7 @@ export default async function AttendancePage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-6">Attendance</h1>
+      <h1 className="font-display text-2xl font-semibold mb-6">Attendance</h1>
       <AttendanceMarker
         slug={slug}
         sections={sections.map((s) => ({ id: s.id, label: `${s.schoolClass.name} - ${s.name}` }))}

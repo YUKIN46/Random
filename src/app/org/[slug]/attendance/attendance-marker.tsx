@@ -56,7 +56,7 @@ export default function AttendanceMarker({
         <select
           value={selectedSectionId}
           onChange={(e) => updateFilters(e.target.value, date)}
-          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+          className="rounded-lg border border-line px-3 py-2 text-sm"
         >
           {sections.map((s) => (
             <option key={s.id} value={s.id}>
@@ -68,13 +68,13 @@ export default function AttendanceMarker({
           type="date"
           value={date}
           onChange={(e) => updateFilters(selectedSectionId, e.target.value)}
-          className="rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+          className="rounded-lg border border-line px-3 py-2 text-sm"
         />
       </div>
 
-      <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden">
+      <div className="bg-paper-raised border border-line rounded-xl overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-neutral-50 text-left text-neutral-500">
+          <thead className="bg-paper text-left text-slate">
             <tr>
               <th className="px-4 py-3 font-medium">Student</th>
               <th className="px-4 py-3 font-medium">Status</th>
@@ -82,7 +82,7 @@ export default function AttendanceMarker({
           </thead>
           <tbody>
             {local.map((s) => (
-              <tr key={s.id} className="border-t border-neutral-100">
+              <tr key={s.id} className="border-t border-line">
                 <td className="px-4 py-3">{s.name}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-1">
@@ -92,8 +92,8 @@ export default function AttendanceMarker({
                         onClick={() => setStatus(s.id, st)}
                         className={`px-3 py-1 rounded-md text-xs font-medium border ${
                           s.status === st
-                            ? "bg-neutral-900 text-white border-neutral-900"
-                            : "border-neutral-300 text-neutral-600"
+                            ? "bg-ink text-paper border-ink"
+                            : "border-line text-slate"
                         }`}
                       >
                         {st}
@@ -105,7 +105,7 @@ export default function AttendanceMarker({
             ))}
             {local.length === 0 && (
               <tr>
-                <td colSpan={2} className="px-4 py-6 text-center text-neutral-400">
+                <td colSpan={2} className="px-4 py-6 text-center text-slate">
                   No students in this section.
                 </td>
               </tr>
@@ -118,7 +118,7 @@ export default function AttendanceMarker({
         <button
           onClick={save}
           disabled={saving}
-          className="mt-4 rounded-lg bg-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+          className="mt-4 rounded-lg bg-ink text-paper px-4 py-2 text-sm font-medium disabled:opacity-50"
         >
           {saving ? "Saving…" : "Save attendance"}
         </button>

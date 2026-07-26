@@ -40,7 +40,7 @@ export default function AddStudentForm({
     return (
       <button
         onClick={() => setOpen(true)}
-        className="rounded-lg bg-neutral-900 text-white px-4 py-2 text-sm font-medium"
+        className="rounded-lg bg-ink text-paper px-4 py-2 text-sm font-medium"
       >
         + Add student
       </button>
@@ -48,13 +48,13 @@ export default function AddStudentForm({
   }
 
   return (
-    <form onSubmit={submit} className="bg-white border border-neutral-200 rounded-xl p-5 grid grid-cols-2 gap-4">
+    <form onSubmit={submit} className="bg-paper-raised border border-line rounded-xl p-5 grid grid-cols-2 gap-4">
       <input
         required
         placeholder="Full name"
         value={form.name}
         onChange={(e) => setForm({ ...form, name: e.target.value })}
-        className="rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+        className="rounded-lg border border-line px-3 py-2 text-sm"
       />
       <input
         required
@@ -62,12 +62,12 @@ export default function AddStudentForm({
         placeholder="Email"
         value={form.email}
         onChange={(e) => setForm({ ...form, email: e.target.value })}
-        className="rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+        className="rounded-lg border border-line px-3 py-2 text-sm"
       />
       <select
         value={form.sectionId}
         onChange={(e) => setForm({ ...form, sectionId: e.target.value })}
-        className="rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+        className="rounded-lg border border-line px-3 py-2 text-sm"
       >
         <option value="">No section</option>
         {sections.map((s) => (
@@ -80,21 +80,21 @@ export default function AddStudentForm({
         placeholder="Admission No."
         value={form.admissionNo}
         onChange={(e) => setForm({ ...form, admissionNo: e.target.value })}
-        className="rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+        className="rounded-lg border border-line px-3 py-2 text-sm"
       />
-      {error && <p className="col-span-2 text-red-600 text-sm">{error}</p>}
+      {error && <p className="col-span-2 text-ledger-red text-sm">{error}</p>}
       <div className="col-span-2 flex gap-2">
         <button
           type="submit"
           disabled={loading}
-          className="rounded-lg bg-neutral-900 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+          className="rounded-lg bg-ink text-paper px-4 py-2 text-sm font-medium disabled:opacity-50"
         >
           {loading ? "Saving…" : "Save"}
         </button>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium"
+          className="rounded-lg border border-line px-4 py-2 text-sm font-medium"
         >
           Cancel
         </button>

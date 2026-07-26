@@ -19,14 +19,14 @@ export default function ApproveRejectButtons({ orgId }: { orgId: string }) {
       <button
         onClick={() => act("approve")}
         disabled={loading !== null}
-        className="rounded-lg bg-emerald-600 text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+        className="rounded-md bg-chalk px-4 py-2 font-mono text-xs uppercase tracking-wider text-paper disabled:opacity-50"
       >
         {loading === "approve" ? "Approving…" : "Approve"}
       </button>
       <button
         onClick={() => act("reject")}
         disabled={loading !== null}
-        className="rounded-lg bg-red-50 text-red-700 border border-red-200 px-4 py-2 text-sm font-medium disabled:opacity-50"
+        className="rounded-md border border-ledger-red/30 bg-ledger-red/5 px-4 py-2 font-mono text-xs uppercase tracking-wider text-ledger-red disabled:opacity-50"
       >
         {loading === "reject" ? "Rejecting…" : "Reject"}
       </button>
