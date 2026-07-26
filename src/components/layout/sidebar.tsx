@@ -11,6 +11,7 @@ const NAV: { href: string; label: string; roles: SessionUser["role"][] }[] = [
   { href: "exams", label: "Exams & Grades", roles: ["ORG_ADMIN", "TEACHER", "STUDENT"] },
   { href: "fees", label: "Fees & Billing", roles: ["ORG_ADMIN", "ACCOUNTANT", "STUDENT", "PARENT"] },
   { href: "notes", label: "Notes & Announcements", roles: ["ORG_ADMIN", "TEACHER", "STUDENT", "PARENT"] },
+  { href: "settings", label: "School Settings", roles: ["ORG_ADMIN"] },
 ];
 
 export default function Sidebar({
