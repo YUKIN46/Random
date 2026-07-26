@@ -35,7 +35,7 @@ export default function PayButton({
     <button
       onClick={recordPayment}
       disabled={loading}
-      className="text-xs font-medium text-ink underline disabled:opacity-50"
+      className="font-mono text-xs uppercase tracking-wider text-ink underline disabled:opacity-50"
     >
       {loading ? "Saving…" : "Record payment"}
     </button>

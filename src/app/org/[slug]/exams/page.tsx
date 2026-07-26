@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireOrgMember } from "@/lib/authz";
 import NewExamForm from "./new-exam-form";
+import ExamCardHeader from "./exam-card-header";
 
 export default async function ExamsPage({
   params,
@@ -40,22 +41,32 @@ export default async function ExamsPage({
       <div className="space-y-4 mt-6">
         {exams.map((exam) => (
           <div key={exam.id} className="bg-paper-raised border border-line rounded-xl p-5">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <p className="font-medium">{exam.name}</p>
+            {isStaff ? (
+              <ExamCardHeader
+                slug={slug}
+                examId={exam.id}
+                name={exam.name}
+                subjectName={exam.subject.name}
+                examDate={exam.examDate.toISOString().slice(0, 10)}
+                maxMarks={exam.maxMarks}
+                passMarks={exam.passMarks}
+              />
+            ) : (
+              <div className="mb-3">
+                <p className="font-medium text-ink">{exam.name}</p>
                 <p className="text-sm text-slate">
                   {exam.subject.name} · {exam.examDate.toLocaleDateString()} · Max {exam.maxMarks}
                 </p>
               </div>
-              {isStaff && (
-                <Link
-                  href={`/org/${slug}/exams/${exam.id}/enter-results`}
-                  className="text-xs font-medium text-ink underline"
-                >
-                  Enter results
-                </Link>
-              )}
-            </div>
+            )}
+            {isStaff && (
+              <Link
+                href={`/org/${slug}/exams/${exam.id}/enter-results`}
+                className="font-mono text-xs uppercase tracking-wider text-ink underline mb-3 inline-block"
+              >
+                Enter results
+              </Link>
+            )}
             <table className="w-full text-sm">
               <thead className="text-left text-slate">
                 <tr>

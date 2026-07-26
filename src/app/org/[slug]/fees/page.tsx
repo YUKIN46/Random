@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { requireOrgMember } from "@/lib/authz";
 import NewInvoiceForm from "./new-invoice-form";
 import PayButton from "./pay-button";
+import InvoiceCancelButton from "./invoice-cancel-button";
 
 export default async function FeesPage({
   params,
@@ -66,7 +67,14 @@ export default async function FeesPage({
                 </td>
                 {isStaff && (
                   <td className="px-4 py-3">
-                    {inv.status !== "PAID" && <PayButton slug={slug} invoiceId={inv.id} remaining={inv.amountDue - inv.amountPaid} />}
+                    <div className="flex items-center gap-3">
+                      {inv.status !== "PAID" && inv.status !== "CANCELLED" && (
+                        <PayButton slug={slug} invoiceId={inv.id} remaining={inv.amountDue - inv.amountPaid} />
+                      )}
+                      {inv.status !== "PAID" && (
+                        <InvoiceCancelButton slug={slug} invoiceId={inv.id} cancelled={inv.status === "CANCELLED"} />
+                      )}
+                    </div>
                   </td>
                 )}
               </tr>
