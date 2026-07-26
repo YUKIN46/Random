@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import CredentialReveal from "@/components/credential-reveal";
 
 export default function AddTeacherForm({ slug }: { slug: string }) {
   const router = useRouter();
@@ -9,6 +10,7 @@ export default function AddTeacherForm({ slug }: { slug: string }) {
   const [form, setForm] = useState({ name: "", email: "", employeeCode: "" });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [created, setCreated] = useState<{ email: string; tempPassword: string } | null>(null);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -19,15 +21,26 @@ export default function AddTeacherForm({ slug }: { slug: string }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...form, slug }),
     });
+    const data = await res.json().catch(() => ({}));
     setLoading(false);
     if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
       setError(data.error ?? "Failed to add teacher.");
       return;
     }
+    setCreated({ email: data.email, tempPassword: data.tempPassword });
     setForm({ name: "", email: "", employeeCode: "" });
     setOpen(false);
     router.refresh();
+  }
+
+  if (created) {
+    return (
+      <CredentialReveal
+        email={created.email}
+        password={created.tempPassword}
+        onDismiss={() => setCreated(null)}
+      />
+    );
   }
 
   if (!open) {

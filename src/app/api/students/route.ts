@@ -52,7 +52,9 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  // TODO: email the temp password / invite link to the student's guardian.
+  // TODO: email the temp password / invite link to the student's guardian
+  // once an email provider is wired up. Until then, return it once here so
+  // the admin can share it manually — it is never stored or shown again.
 
-  return NextResponse.json({ id: student.id }, { status: 201 });
+  return NextResponse.json({ id: student.id, email, tempPassword }, { status: 201 });
 }

@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     include: { schoolClass: true },
   });
 
-  const results: { email: string; status: "created" | "skipped"; reason?: string }[] = [];
+  const results: { email: string; status: "created" | "skipped"; reason?: string; tempPassword?: string }[] = [];
 
   for (const row of rows) {
     const existing = await prisma.user.findUnique({ where: { email: row.email } });
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    results.push({ email: row.email, status: "created" });
+    results.push({ email: row.email, status: "created", tempPassword });
   }
 
   return NextResponse.json({

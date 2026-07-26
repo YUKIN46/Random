@@ -37,5 +37,5 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return NextResponse.json({ id: teacher.id }, { status: 201 });
+  return NextResponse.json({ id: teacher.id, email, tempPassword }, { status: 201 });
 }
