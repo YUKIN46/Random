@@ -29,7 +29,7 @@ export default async function NotesPage({
               <p className="font-medium text-ink">{n.title}</p>
               <div className="flex items-center gap-3 shrink-0">
                 <span className="font-mono text-xs text-slate">{n.visibility}</span>
-                {(n.authorId === user.id || user.role === "ORG_ADMIN") && (
+                {(n.authorId === user.id || user.role === "ORG_ADMIN" || user.role === "SUPER_ADMIN") && (
                   <DeleteNoteButton slug={slug} noteId={n.id} />
                 )}
               </div>

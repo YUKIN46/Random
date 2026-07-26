@@ -24,7 +24,7 @@ export default function Sidebar({
   slug: string;
   role: SessionUser["role"];
 }) {
-  const items = NAV.filter((item) => item.roles.includes(role));
+  const items = NAV.filter((item) => item.roles.includes(role) || role === "SUPER_ADMIN");
   const navId = "org-nav-toggle";
 
   return (
@@ -36,9 +36,15 @@ export default function Sidebar({
       <div className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-paper-raised px-4 py-3 lg:hidden">
         <div>
           <p className="font-display font-semibold leading-tight text-ink">{orgName}</p>
-          <p className="font-mono text-[0.65rem] uppercase tracking-wider text-slate">
-            {role.replace("_", " ")}
-          </p>
+          {role === "SUPER_ADMIN" ? (
+            <p className="font-mono text-[0.65rem] uppercase tracking-wider text-brass">
+              Viewing as Platform Admin
+            </p>
+          ) : (
+            <p className="font-mono text-[0.65rem] uppercase tracking-wider text-slate">
+              {role.replace("_", " ")}
+            </p>
+          )}
         </div>
         <label
           htmlFor={navId}
@@ -67,10 +73,24 @@ export default function Sidebar({
       >
         <div className="mb-8 hidden lg:block">
           <p className="font-display font-semibold leading-tight text-ink">{orgName}</p>
-          <p className="font-mono text-[0.65rem] uppercase tracking-wider text-slate">
-            {role.replace("_", " ")}
-          </p>
+          {role === "SUPER_ADMIN" ? (
+            <p className="font-mono text-[0.65rem] uppercase tracking-wider text-brass">
+              Viewing as Platform Admin
+            </p>
+          ) : (
+            <p className="font-mono text-[0.65rem] uppercase tracking-wider text-slate">
+              {role.replace("_", " ")}
+            </p>
+          )}
         </div>
+        {role === "SUPER_ADMIN" && (
+          <Link
+            href="/super-admin/orgs"
+            className="mb-4 block font-mono text-xs uppercase tracking-wider text-slate hover:text-ink"
+          >
+            ← All schools
+          </Link>
+        )}
         <nav className="flex-1 space-y-1 overflow-y-auto">
           {items.map((item) => (
             <Link

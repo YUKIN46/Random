@@ -10,7 +10,7 @@ export default async function DashboardPage({
   const user = await requireOrgMember(slug);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
-  const isStaff = ["ORG_ADMIN", "TEACHER", "ACCOUNTANT"].includes(user.role);
+  const isStaff = ["ORG_ADMIN", "TEACHER", "ACCOUNTANT", "SUPER_ADMIN"].includes(user.role);
 
   if (isStaff) {
     return <StaffDashboard organizationId={org.id} />;

@@ -15,7 +15,7 @@ export default async function TimetablePage({
   const sp = await searchParams;
   const user = await requireOrgMember(slug);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
-  const isAdmin = user.role === "ORG_ADMIN";
+  const isAdmin = user.role === "ORG_ADMIN" || user.role === "SUPER_ADMIN";
 
   const sections = await prisma.section.findMany({
     where: { organizationId: org.id },

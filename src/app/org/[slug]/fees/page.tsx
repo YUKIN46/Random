@@ -13,7 +13,7 @@ export default async function FeesPage({
   const user = await requireOrgMember(slug);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
-  const isStaff = ["ORG_ADMIN", "ACCOUNTANT"].includes(user.role);
+  const isStaff = ["ORG_ADMIN", "ACCOUNTANT", "SUPER_ADMIN"].includes(user.role);
 
   const invoices = await prisma.invoice.findMany({
     where: {

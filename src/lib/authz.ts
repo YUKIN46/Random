@@ -22,6 +22,7 @@ export async function requireRole(
   allowed: SessionUser["role"][]
 ): Promise<SessionUser> {
   const user = await requireOrgMember(slug);
+  if (user.role === "SUPER_ADMIN") return user;
   if (!allowed.includes(user.role)) redirect(`/org/${slug}/dashboard`);
   return user;
 }

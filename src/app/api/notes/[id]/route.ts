@@ -14,7 +14,7 @@ export async function DELETE(
   const user = await requireOrgMember(slug);
   const note = await prisma.note.findUniqueOrThrow({ where: { id } });
 
-  if (note.authorId !== user.id && user.role !== "ORG_ADMIN") {
+  if (note.authorId !== user.id && user.role !== "ORG_ADMIN" && user.role !== "SUPER_ADMIN") {
     return NextResponse.json({ error: "Not allowed" }, { status: 403 });
   }
 

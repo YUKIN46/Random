@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireSuperAdmin } from "@/lib/authz";
 import { prisma } from "@/lib/prisma";
 import OrgStatusActions from "./org-status-actions";
@@ -46,9 +47,17 @@ export default async function AllOrgsPage() {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  {(org.status === "APPROVED" || org.status === "SUSPENDED") && (
-                    <OrgStatusActions orgId={org.id} status={org.status} />
-                  )}
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href={`/org/${org.slug}/dashboard`}
+                      className="font-mono text-xs uppercase tracking-wider text-ink underline underline-offset-2"
+                    >
+                      View
+                    </Link>
+                    {(org.status === "APPROVED" || org.status === "SUSPENDED") && (
+                      <OrgStatusActions orgId={org.id} status={org.status} />
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

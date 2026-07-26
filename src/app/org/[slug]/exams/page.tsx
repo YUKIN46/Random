@@ -12,7 +12,7 @@ export default async function ExamsPage({
   const { slug } = await params;
   const user = await requireOrgMember(slug);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
-  const isStaff = ["ORG_ADMIN", "TEACHER"].includes(user.role);
+  const isStaff = ["ORG_ADMIN", "TEACHER", "SUPER_ADMIN"].includes(user.role);
 
   const exams = await prisma.exam.findMany({
     where: { organizationId: org.id },
