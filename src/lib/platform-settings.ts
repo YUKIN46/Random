@@ -13,8 +13,17 @@ export const DEFAULT_PLATFORM_SETTINGS = {
 };
 
 export async function getPlatformSettings() {
-  const row = await prisma.platformSettings.findUnique({
-    where: { id: PLATFORM_SETTINGS_ID },
-  });
-  return row ?? { id: PLATFORM_SETTINGS_ID, ...DEFAULT_PLATFORM_SETTINGS, updatedAt: null, updatedById: null };
+  try {
+    const row = await prisma.platformSettings.findUnique({
+      where: { id: PLATFORM_SETTINGS_ID },
+    });
+    return row ?? { id: PLATFORM_SETTINGS_ID, ...DEFAULT_PLATFORM_SETTINGS, updatedAt: null, updatedById: null };
+  } catch (err) {
+    // Falls back to defaults if the table doesn't exist yet (schema not
+    // pushed) or the DB is briefly unreachable — this runs at build time
+    // for static prerendering, so a hard failure here would take down the
+    // whole build, not just show a broken homepage.
+    console.error("Failed to load platform settings, using defaults:", err);
+    return { id: PLATFORM_SETTINGS_ID, ...DEFAULT_PLATFORM_SETTINGS, updatedAt: null, updatedById: null };
+  }
 }

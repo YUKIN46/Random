@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { getPlatformSettings } from "@/lib/platform-settings";
 
+// Content here is editable by the super admin at runtime (see
+// /super-admin/site-content), so this must be rendered per-request rather
+// than statically prerendered at build time — otherwise edits wouldn't
+// show up until the next deploy, and the build would depend on the DB
+// being reachable/migrated at build time.
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const settings = await getPlatformSettings();
 
