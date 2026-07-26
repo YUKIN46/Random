@@ -18,10 +18,10 @@ export default async function OrgLayout({
   const user = await requireOrgMember(slug);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen flex-col lg:flex-row">
       <Sidebar orgName={org.name} slug={slug} role={user.role} />
-      <div className="flex-1 bg-neutral-50">
-        <main className="p-8">{children}</main>
+      <div className="flex-1 bg-paper">
+        <main className="p-5 sm:p-8">{children}</main>
       </div>
     </div>
   );

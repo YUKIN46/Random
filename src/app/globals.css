@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Ledger palette — cool paper, ink, and a brass seal accent */
+  --ink: #1b2a4a;
+  --ink-soft: #2f3f60;
+  --paper: #f5f6f2;
+  --paper-raised: #ffffff;
+  --brass: #b8863b;
+  --brass-dark: #8f6726;
+  --chalk: #2f5233;
+  --ledger-red: #a23b2e;
+  --slate: #5b6472;
+  --line: #ddd9cb;
+
+  --background: var(--paper);
+  --foreground: var(--ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-brass: var(--brass);
+  --color-brass-dark: var(--brass-dark);
+  --color-chalk: var(--chalk);
+  --color-ledger-red: var(--ledger-red);
+  --color-slate: var(--slate);
+  --color-line: var(--line);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ── Hero load sequence ────────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes settle-in {
+  from { opacity: 0; transform: translateY(18px) rotate(0deg); }
+  to { opacity: 1; transform: translateY(0) rotate(-1.5deg); }
+}
+
+@keyframes stamp-down {
+  0% { opacity: 0; transform: rotate(-32deg) scale(1.6); }
+  60% { opacity: 1; transform: rotate(-6deg) scale(0.94); }
+  100% { opacity: 1; transform: rotate(-10deg) scale(1); }
+}
+
+.hero-copy {
+  animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ledger-wrap .ledger-card {
+  animation: settle-in 0.7s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ledger-wrap .ledger-seal {
+  animation: stamp-down 0.5s 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.feature-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink);
+  box-shadow: 0 12px 24px -16px rgba(27, 42, 74, 0.25);
+}
+
+.flow-step {
+  animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.flow-step:nth-child(1) { animation-delay: 0s; }
+.flow-step:nth-child(2) { animation-delay: 0.08s; }
+.flow-step:nth-child(3) { animation-delay: 0.16s; }
+.flow-step:nth-child(4) { animation-delay: 0.24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
