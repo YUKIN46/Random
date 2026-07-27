@@ -13,10 +13,10 @@ export default function InvoiceCancelButton({
   cancelled: boolean;
 }) {
   const router = useRouter();
+  const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function act() {
-    if (!cancelled && !confirm("Cancel this invoice?")) return;
     setLoading(true);
     await fetch(`/api/invoices/${invoiceId}`, {
       method: "PATCH",
@@ -24,16 +24,48 @@ export default function InvoiceCancelButton({
       body: JSON.stringify({ slug, action: cancelled ? "reopen" : "cancel" }),
     });
     setLoading(false);
+    setConfirming(false);
     router.refresh();
+  }
+
+  if (cancelled) {
+    return (
+      <button
+        onClick={act}
+        disabled={loading}
+        className="font-mono text-xs uppercase tracking-wider text-ink underline disabled:opacity-50"
+      >
+        {loading ? "…" : "Reopen"}
+      </button>
+    );
+  }
+
+  if (confirming) {
+    return (
+      <span className="flex items-center gap-2">
+        <button
+          onClick={act}
+          disabled={loading}
+          className="font-mono text-xs uppercase tracking-wider text-ledger-red underline disabled:opacity-50"
+        >
+          {loading ? "…" : "Confirm"}
+        </button>
+        <button
+          onClick={() => setConfirming(false)}
+          className="font-mono text-xs uppercase tracking-wider text-slate"
+        >
+          Cancel
+        </button>
+      </span>
+    );
   }
 
   return (
     <button
-      onClick={act}
-      disabled={loading}
-      className={`font-mono text-xs uppercase tracking-wider underline disabled:opacity-50 ${cancelled ? "text-ink" : "text-ledger-red"}`}
+      onClick={() => setConfirming(true)}
+      className="font-mono text-xs uppercase tracking-wider text-ledger-red"
     >
-      {loading ? "…" : cancelled ? "Reopen" : "Cancel"}
+      Cancel
     </button>
   );
 }
