@@ -9,6 +9,13 @@ const updateSchema = z.object({
   classTeacherId: z.string().optional(),
 });
 
+async function assertOwnership(id: string, slug: string) {
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
+  const section = await prisma.section.findUnique({ where: { id } });
+  if (!section || section.organizationId !== org.id) return null;
+  return section;
+}
+
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -19,6 +26,10 @@ export async function PATCH(
   const { slug, name, classTeacherId } = parsed.data;
 
   await requireRole(slug, ["ORG_ADMIN"]);
+  if (!(await assertOwnership(id, slug))) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   await prisma.section.update({
     where: { id },
     data: {
@@ -40,6 +51,10 @@ export async function DELETE(
   if (!slug) return NextResponse.json({ error: "Missing org context" }, { status: 400 });
 
   await requireRole(slug, ["ORG_ADMIN"]);
+  if (!(await assertOwnership(id, slug))) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   // Students in this section have their sectionId set to null (not
   // deleted). Attendance records and timetable slots for this section
   // are cascaded away — the UI warns about this before confirming.

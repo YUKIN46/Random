@@ -21,6 +21,13 @@ export async function PATCH(
   const { slug, name, examDate, maxMarks, passMarks } = parsed.data;
 
   await requireRole(slug, ["ORG_ADMIN", "TEACHER"]);
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
+
+  const exam = await prisma.exam.findUnique({ where: { id } });
+  if (!exam || exam.organizationId !== org.id) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   await prisma.exam.update({
     where: { id },
     data: { name, examDate: new Date(examDate), maxMarks, passMarks },
@@ -39,6 +46,13 @@ export async function DELETE(
   if (!slug) return NextResponse.json({ error: "Missing org context" }, { status: 400 });
 
   await requireRole(slug, ["ORG_ADMIN", "TEACHER"]);
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
+
+  const exam = await prisma.exam.findUnique({ where: { id } });
+  if (!exam || exam.organizationId !== org.id) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   // Cascades to its exam results.
   await prisma.exam.delete({ where: { id } });
 

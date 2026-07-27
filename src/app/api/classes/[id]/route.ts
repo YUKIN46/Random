@@ -5,6 +5,13 @@ import { requireRole } from "@/lib/authz";
 
 const updateSchema = z.object({ slug: z.string(), name: z.string().min(1) });
 
+async function assertOwnership(id: string, slug: string) {
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
+  const schoolClass = await prisma.schoolClass.findUnique({ where: { id } });
+  if (!schoolClass || schoolClass.organizationId !== org.id) return null;
+  return schoolClass;
+}
+
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -15,8 +22,11 @@ export async function PATCH(
   const { slug, name } = parsed.data;
 
   await requireRole(slug, ["ORG_ADMIN"]);
-  await prisma.schoolClass.update({ where: { id }, data: { name } });
+  if (!(await assertOwnership(id, slug))) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
 
+  await prisma.schoolClass.update({ where: { id }, data: { name } });
   return NextResponse.json({ ok: true });
 }
 
@@ -30,6 +40,10 @@ export async function DELETE(
   if (!slug) return NextResponse.json({ error: "Missing org context" }, { status: 400 });
 
   await requireRole(slug, ["ORG_ADMIN"]);
+  if (!(await assertOwnership(id, slug))) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   // Cascades to sections, and from there to attendance/timetable slots
   // tied to those sections — the confirm dialog in the UI warns about this.
   await prisma.schoolClass.delete({ where: { id } });

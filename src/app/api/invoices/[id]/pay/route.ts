@@ -20,8 +20,12 @@ export async function POST(
   const { slug, amount, method, reference } = parsed.data;
 
   await requireRole(slug, ["ORG_ADMIN", "ACCOUNTANT"]);
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
-  const invoice = await prisma.invoice.findUniqueOrThrow({ where: { id } });
+  const invoice = await prisma.invoice.findUnique({ where: { id } });
+  if (!invoice || invoice.organizationId !== org.id) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
   const newPaid = invoice.amountPaid + amount;
   const status = newPaid >= invoice.amountDue ? "PAID" : "PARTIAL";
 

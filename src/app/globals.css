@@ -89,6 +89,66 @@ body {
 .flow-step:nth-child(3) { animation-delay: 0.16s; }
 .flow-step:nth-child(4) { animation-delay: 0.24s; }
 
+/* ── Floating ink-blot bubbles (hero background) ─────────────────── */
+@keyframes drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(18px, -26px) scale(1.06); }
+}
+
+@keyframes drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-22px, 20px) scale(0.95); }
+}
+
+.ink-bubble {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(2px);
+}
+
+.ink-bubble-1 {
+  width: 220px;
+  height: 220px;
+  top: -60px;
+  right: 8%;
+  animation: drift-a 14s ease-in-out infinite;
+}
+
+.ink-bubble-2 {
+  width: 140px;
+  height: 140px;
+  top: 30%;
+  right: 28%;
+  animation: drift-b 11s ease-in-out infinite;
+}
+
+.ink-bubble-3 {
+  width: 90px;
+  height: 90px;
+  bottom: 8%;
+  right: 4%;
+  animation: drift-a 9s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+.ink-bubble-4 {
+  width: 60px;
+  height: 60px;
+  top: 12%;
+  left: 6%;
+  animation: drift-b 12s ease-in-out infinite;
+  animation-delay: -5s;
+}
+
+.ink-bubble-5 {
+  width: 160px;
+  height: 160px;
+  bottom: -40px;
+  left: 20%;
+  animation: drift-a 16s ease-in-out infinite;
+  animation-delay: -8s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

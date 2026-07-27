@@ -38,7 +38,16 @@ export default async function Home() {
       </header>
 
       {/* ── Hero ────────────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-5 pt-14 pb-20 sm:px-8 sm:pt-20 sm:pb-28">
+      <section className="relative overflow-hidden mx-auto max-w-6xl px-5 pt-14 pb-20 sm:px-8 sm:pt-20 sm:pb-28">
+        {/* Floating ink-blot bubbles — decorative, behind content */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+          <span className="ink-bubble ink-bubble-1 bg-brass/15" />
+          <span className="ink-bubble ink-bubble-2 bg-chalk/10" />
+          <span className="ink-bubble ink-bubble-3 bg-ledger-red/10" />
+          <span className="ink-bubble ink-bubble-4 bg-brass/10" />
+          <span className="ink-bubble ink-bubble-5 bg-ink/5" />
+        </div>
+
         <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
           {/* Copy */}
           <div className="hero-copy">

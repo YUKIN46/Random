@@ -12,7 +12,12 @@ export async function DELETE(
   if (!slug) return NextResponse.json({ error: "Missing org context" }, { status: 400 });
 
   const user = await requireOrgMember(slug);
-  const note = await prisma.note.findUniqueOrThrow({ where: { id } });
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
+  const note = await prisma.note.findUnique({ where: { id } });
+
+  if (!note || note.organizationId !== org.id) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
 
   if (note.authorId !== user.id && user.role !== "ORG_ADMIN" && user.role !== "SUPER_ADMIN") {
     return NextResponse.json({ error: "Not allowed" }, { status: 403 });

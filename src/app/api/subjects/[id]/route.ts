@@ -9,6 +9,13 @@ const updateSchema = z.object({
   code: z.string().optional(),
 });
 
+async function assertOwnership(id: string, slug: string) {
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
+  const subject = await prisma.subject.findUnique({ where: { id } });
+  if (!subject || subject.organizationId !== org.id) return null;
+  return subject;
+}
+
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -19,8 +26,11 @@ export async function PATCH(
   const { slug, name, code } = parsed.data;
 
   await requireRole(slug, ["ORG_ADMIN"]);
-  await prisma.subject.update({ where: { id }, data: { name, code: code || null } });
+  if (!(await assertOwnership(id, slug))) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
 
+  await prisma.subject.update({ where: { id }, data: { name, code: code || null } });
   return NextResponse.json({ ok: true });
 }
 
@@ -34,6 +44,10 @@ export async function DELETE(
   if (!slug) return NextResponse.json({ error: "Missing org context" }, { status: 400 });
 
   await requireRole(slug, ["ORG_ADMIN"]);
+  if (!(await assertOwnership(id, slug))) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   // Cascades to exams (and their results), teacher assignments, and
   // timetable slots for this subject — the UI warns about this.
   await prisma.subject.delete({ where: { id } });

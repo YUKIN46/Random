@@ -20,8 +20,12 @@ export async function PATCH(
   const { slug, name, employeeCode, phone } = parsed.data;
 
   await requireRole(slug, ["ORG_ADMIN"]);
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
-  const teacher = await prisma.teacher.findUniqueOrThrow({ where: { id } });
+  const teacher = await prisma.teacher.findUnique({ where: { id } });
+  if (!teacher || teacher.organizationId !== org.id) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
 
   await prisma.$transaction([
     prisma.user.update({ where: { id: teacher.userId }, data: { name } }),
@@ -44,8 +48,13 @@ export async function DELETE(
   if (!slug) return NextResponse.json({ error: "Missing org context" }, { status: 400 });
 
   await requireRole(slug, ["ORG_ADMIN"]);
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
-  const teacher = await prisma.teacher.findUniqueOrThrow({ where: { id } });
+  const teacher = await prisma.teacher.findUnique({ where: { id } });
+  if (!teacher || teacher.organizationId !== org.id) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   await prisma.user.delete({ where: { id: teacher.userId } });
 
   return NextResponse.json({ ok: true });

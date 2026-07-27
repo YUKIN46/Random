@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireOrgMember } from "@/lib/authz";
 import NewSlotForm from "./new-slot-form";
+import SectionSelect from "./section-select";
 
 const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"] as const;
 
@@ -39,18 +40,12 @@ export default async function TimetablePage({
     <div>
       <h1 className="font-display text-2xl font-semibold mb-6">Timetable</h1>
 
-      <form className="mb-6">
-        <select
-          name="sectionId"
-          defaultValue={sectionId ?? ""}
-          className="rounded-lg border border-line px-3 py-2 text-sm"
-          onChange={(e) => e.currentTarget.form?.submit()}
-        >
-          {sections.map((s) => (
-            <option key={s.id} value={s.id}>{s.schoolClass.name} - {s.name}</option>
-          ))}
-        </select>
-      </form>
+      <div className="mb-6">
+        <SectionSelect
+          sections={sections.map((s) => ({ id: s.id, label: `${s.schoolClass.name} - ${s.name}` }))}
+          selectedSectionId={sectionId ?? ""}
+        />
+      </div>
 
       {isAdmin && sectionId && (
         <NewSlotForm

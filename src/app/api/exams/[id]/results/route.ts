@@ -32,10 +32,23 @@ export async function POST(
   const { slug, results } = parsed.data;
 
   await requireRole(slug, ["ORG_ADMIN", "TEACHER"]);
-  const exam = await prisma.exam.findUniqueOrThrow({ where: { id: examId } });
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
+
+  const exam = await prisma.exam.findUnique({ where: { id: examId } });
+  if (!exam || exam.organizationId !== org.id) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  const studentIds = results.map((r) => r.studentId);
+  const validStudents = await prisma.student.findMany({
+    where: { id: { in: studentIds }, organizationId: org.id },
+    select: { id: true },
+  });
+  const validIds = new Set(validStudents.map((s) => s.id));
+  const safeResults = results.filter((r) => validIds.has(r.studentId));
 
   await prisma.$transaction(
-    results.map((r) => {
+    safeResults.map((r) => {
       const pct = (r.marksObtained / exam.maxMarks) * 100;
       return prisma.examResult.upsert({
         where: { examId_studentId: { examId, studentId: r.studentId } },
@@ -50,5 +63,5 @@ export async function POST(
     })
   );
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, saved: safeResults.length, skipped: results.length - safeResults.length });
 }

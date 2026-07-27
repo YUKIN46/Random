@@ -25,6 +25,12 @@ export async function PATCH(
     parsed.data;
 
   await requireRole(slug, ["ORG_ADMIN", "TEACHER"]);
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
+
+  const student = await prisma.student.findUnique({ where: { id } });
+  if (!student || student.organizationId !== org.id) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
 
   await prisma.student.update({
     where: { id },
@@ -52,8 +58,13 @@ export async function DELETE(
   if (!slug) return NextResponse.json({ error: "Missing org context" }, { status: 400 });
 
   await requireRole(slug, ["ORG_ADMIN"]);
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
-  const student = await prisma.student.findUniqueOrThrow({ where: { id } });
+  const student = await prisma.student.findUnique({ where: { id } });
+  if (!student || student.organizationId !== org.id) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   // Deleting the User cascades to Student and all of its dependent
   // records (attendance, exam results, invoices) per the schema.
   await prisma.user.delete({ where: { id: student.userId } });

@@ -20,13 +20,18 @@ export async function PATCH(
   const { slug, amountDue, dueDate, action } = parsed.data;
 
   await requireRole(slug, ["ORG_ADMIN", "ACCOUNTANT"]);
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
+
+  const invoice = await prisma.invoice.findUnique({ where: { id } });
+  if (!invoice || invoice.organizationId !== org.id) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
 
   if (action === "cancel") {
     await prisma.invoice.update({ where: { id }, data: { status: "CANCELLED" } });
     return NextResponse.json({ ok: true });
   }
   if (action === "reopen") {
-    const invoice = await prisma.invoice.findUniqueOrThrow({ where: { id } });
     const status = invoice.amountPaid >= invoice.amountDue ? "PAID" : invoice.amountPaid > 0 ? "PARTIAL" : "UNPAID";
     await prisma.invoice.update({ where: { id }, data: { status } });
     return NextResponse.json({ ok: true });
