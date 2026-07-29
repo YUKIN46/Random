@@ -54,7 +54,7 @@ export default function AddSubjectForm({
   }
 
   return (
-    <form onSubmit={submit} className="bg-paper-raised border border-line rounded-xl p-5 grid grid-cols-3 gap-4">
+    <form onSubmit={submit} className="bg-paper-raised border border-line rounded-xl p-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
       <input required placeholder="Subject name" value={name} onChange={(e) => setName(e.target.value)} className="rounded-lg border border-line px-3 py-2 text-sm" />
       <input placeholder="Code (optional)" value={code} onChange={(e) => setCode(e.target.value)} className="rounded-lg border border-line px-3 py-2 text-sm" />
       <select value={teacherId} onChange={(e) => setTeacherId(e.target.value)} className="rounded-lg border border-line px-3 py-2 text-sm">

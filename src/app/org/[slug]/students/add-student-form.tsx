@@ -61,7 +61,7 @@ export default function AddStudentForm({
   }
 
   return (
-    <form onSubmit={submit} className="bg-paper-raised border border-line rounded-xl p-5 grid grid-cols-2 gap-4">
+    <form onSubmit={submit} className="bg-paper-raised border border-line rounded-xl p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
       <input
         required
         placeholder="Full name"

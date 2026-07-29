@@ -52,7 +52,7 @@ export default function AddTeacherForm({ slug }: { slug: string }) {
   }
 
   return (
-    <form onSubmit={submit} className="bg-paper-raised border border-line rounded-xl p-5 grid grid-cols-3 gap-4">
+    <form onSubmit={submit} className="bg-paper-raised border border-line rounded-xl p-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
       <input required placeholder="Full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="rounded-lg border border-line px-3 py-2 text-sm" />
       <input required type="email" placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="rounded-lg border border-line px-3 py-2 text-sm" />
       <input placeholder="Employee code" value={form.employeeCode} onChange={(e) => setForm({ ...form, employeeCode: e.target.value })} className="rounded-lg border border-line px-3 py-2 text-sm" />

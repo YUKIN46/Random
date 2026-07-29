@@ -82,7 +82,7 @@ export default function EditStudentForm({
           className="mt-1.5 w-full rounded-md border border-line bg-paper px-3 py-2 text-sm"
         />
       </label>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <label className="block">
           <span className="font-mono text-xs uppercase tracking-wider text-slate">Guardian name</span>
           <input

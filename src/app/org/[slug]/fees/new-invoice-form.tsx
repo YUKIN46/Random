@@ -38,7 +38,7 @@ export default function NewInvoiceForm({
   }
 
   return (
-    <form onSubmit={submit} className="bg-paper-raised border border-line rounded-xl p-5 grid grid-cols-3 gap-4">
+    <form onSubmit={submit} className="bg-paper-raised border border-line rounded-xl p-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
       <select required value={form.studentId} onChange={(e) => setForm({ ...form, studentId: e.target.value })} className="rounded-lg border border-line px-3 py-2 text-sm">
         <option value="">Select student</option>
         {students.map((s) => (

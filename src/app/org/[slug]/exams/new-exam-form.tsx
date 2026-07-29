@@ -45,7 +45,7 @@ export default function NewExamForm({
   }
 
   return (
-    <form onSubmit={submit} className="bg-paper-raised border border-line rounded-xl p-5 grid grid-cols-2 md:grid-cols-5 gap-3">
+    <form onSubmit={submit} className="bg-paper-raised border border-line rounded-xl p-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
       <select required value={form.subjectId} onChange={(e) => setForm({ ...form, subjectId: e.target.value })} className="rounded-lg border border-line px-3 py-2 text-sm">
         <option value="">Subject</option>
         {subjects.map((s) => (
