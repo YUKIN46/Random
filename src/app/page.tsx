@@ -41,11 +41,11 @@ export default async function Home() {
       <section className="relative overflow-hidden mx-auto max-w-6xl px-5 pt-14 pb-20 sm:px-8 sm:pt-20 sm:pb-28">
         {/* Floating ink-blot bubbles — decorative, behind content */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-          <span className="ink-bubble ink-bubble-1 bg-brass/15" />
-          <span className="ink-bubble ink-bubble-2 bg-chalk/10" />
-          <span className="ink-bubble ink-bubble-3 bg-ledger-red/10" />
-          <span className="ink-bubble ink-bubble-4 bg-brass/10" />
-          <span className="ink-bubble ink-bubble-5 bg-ink/5" />
+          <span className="ink-bubble ink-bubble-1 bg-brass/25" />
+          <span className="ink-bubble ink-bubble-2 bg-chalk/20" />
+          <span className="ink-bubble ink-bubble-3 bg-ledger-red/20" />
+          <span className="ink-bubble ink-bubble-4 bg-brass/20" />
+          <span className="ink-bubble ink-bubble-5 bg-ink/10" />
         </div>
 
         <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
@@ -81,17 +81,17 @@ export default async function Home() {
 
           {/* Signature element — the ledger card */}
           <div className="ledger-wrap justify-self-center lg:justify-self-end">
-            <div className="ledger-card relative w-full max-w-sm rounded-lg border border-line bg-paper-raised px-6 pt-6 pb-7 shadow-[0_18px_40px_-18px_rgba(27,42,74,0.35)]">
+            <div className="ledger-card relative w-full max-w-sm rounded-lg border border-line bg-paper-raised px-6 pt-6 pb-7 shadow-[0_24px_55px_-20px_rgba(27,42,74,0.4)]">
               <div className="absolute left-5 top-5 flex gap-2">
                 <span className="h-2.5 w-2.5 rounded-full bg-paper ring-1 ring-line" />
                 <span className="h-2.5 w-2.5 rounded-full bg-paper ring-1 ring-line" />
               </div>
 
-              <div className="ml-10 flex items-baseline justify-between border-b border-line pb-3">
+              <div className="ml-10 mr-14 flex flex-col gap-0.5 border-b border-line pb-3 sm:mr-16">
                 <span className="font-mono text-[0.7rem] uppercase tracking-wider text-slate">
                   Attendance Register
                 </span>
-                <span className="font-mono text-[0.65rem] text-slate">
+                <span className="font-mono text-[0.65rem] text-slate/80">
                   Term II · Wk 6
                 </span>
               </div>
@@ -113,8 +113,8 @@ export default async function Home() {
                 ))}
               </ul>
 
-              <div className="ledger-seal absolute -right-4 -top-5 flex h-20 w-20 rotate-[-10deg] items-center justify-center rounded-full border-2 border-brass/70 text-brass sm:-right-6 sm:-top-6 sm:h-24 sm:w-24">
-                <span className="font-mono text-[0.55rem] font-medium uppercase leading-tight tracking-wider text-center sm:text-[0.6rem]">
+              <div className="ledger-seal absolute -right-6 -top-7 flex h-24 w-24 rotate-[-10deg] items-center justify-center rounded-full border-2 border-brass/70 bg-paper-raised text-brass shadow-sm sm:-right-8 sm:-top-8 sm:h-28 sm:w-28">
+                <span className="font-mono text-[0.58rem] font-medium uppercase leading-tight tracking-wider text-center sm:text-[0.65rem]">
                   Verified
                   <br />
                   School
