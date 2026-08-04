@@ -18,7 +18,11 @@ export default async function FeesPage({
   const invoices = await prisma.invoice.findMany({
     where: {
       organizationId: org.id,
-      ...(isStaff ? {} : { student: { userId: user.id } }),
+      ...(isStaff
+        ? {}
+        : user.role === "PARENT"
+        ? { student: { guardians: { some: { parentUserId: user.id } } } }
+        : { student: { userId: user.id } }),
     },
     include: { student: { include: { user: true } } },
     orderBy: { dueDate: "desc" },

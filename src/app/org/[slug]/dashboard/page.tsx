@@ -1,6 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import { requireOrgMember } from "@/lib/authz";
 
+const STUDENT_INCLUDE = {
+  section: { include: { schoolClass: true } },
+  attendance: { orderBy: { date: "desc" as const }, take: 30 },
+  invoices: { where: { status: { in: ["UNPAID", "PARTIAL", "OVERDUE"] as const } } },
+  examResults: { include: { exam: { include: { subject: true } } }, orderBy: { exam: { examDate: "desc" as const } }, take: 5 },
+};
+
+async function getStudentForDashboard(studentId: string) {
+  return prisma.student.findUnique({ where: { id: studentId }, include: STUDENT_INCLUDE });
+}
+
+type StudentWithData = NonNullable<Awaited<ReturnType<typeof getStudentForDashboard>>>;
+
 export default async function DashboardPage({
   params,
 }: {
@@ -16,15 +29,43 @@ export default async function DashboardPage({
     return <StaffDashboard organizationId={org.id} />;
   }
 
-  // STUDENT or PARENT: show their own snapshot
+  if (user.role === "PARENT") {
+    const links = await prisma.guardian.findMany({
+      where: { parentUserId: user.id },
+      include: { student: { include: { user: true, ...STUDENT_INCLUDE } } },
+    });
+
+    if (links.length === 0) {
+      return (
+        <div>
+          <h1 className="font-display text-2xl font-semibold mb-2">Welcome</h1>
+          <p className="text-slate">
+            No child is linked to your account yet. Contact your school admin
+            if this seems wrong.
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-10">
+        <h1 className="font-display text-2xl font-semibold">Welcome back</h1>
+        {links.map((link) => (
+          <div key={link.id}>
+            <h2 className="font-display text-lg font-semibold text-ink mb-3">
+              {link.student.user.name}
+            </h2>
+            <StudentSnapshot student={link.student} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // STUDENT: show their own snapshot
   const student = await prisma.student.findUnique({
     where: { userId: user.id },
-    include: {
-      section: { include: { schoolClass: true } },
-      attendance: { orderBy: { date: "desc" }, take: 30 },
-      invoices: { where: { status: { in: ["UNPAID", "PARTIAL", "OVERDUE"] } } },
-      examResults: { include: { exam: { include: { subject: true } } }, orderBy: { exam: { examDate: "desc" } }, take: 5 },
-    },
+    include: STUDENT_INCLUDE,
   });
 
   if (!student) {
@@ -39,6 +80,18 @@ export default async function DashboardPage({
     );
   }
 
+  return (
+    <div>
+      <h1 className="font-display text-2xl font-semibold mb-1">Welcome back</h1>
+      <p className="text-slate mb-6">
+        {student.section ? `${student.section.schoolClass.name} - ${student.section.name}` : "No section assigned"}
+      </p>
+      <StudentSnapshot student={student} />
+    </div>
+  );
+}
+
+function StudentSnapshot({ student }: { student: StudentWithData }) {
   const presentCount = student.attendance.filter((a) => a.status === "PRESENT").length;
   const attendancePct = student.attendance.length
     ? Math.round((presentCount / student.attendance.length) * 100)
@@ -47,12 +100,7 @@ export default async function DashboardPage({
 
   return (
     <div>
-      <h1 className="font-display text-2xl font-semibold mb-1">Welcome back</h1>
-      <p className="text-slate mb-6">
-        {student.section ? `${student.section.schoolClass.name} - ${student.section.name}` : "No section assigned"}
-      </p>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-paper-raised border border-line rounded-xl p-5">
           <p className="text-sm text-slate">Attendance (last 30 records)</p>
           <p className="font-mono text-3xl font-semibold mt-1 text-ink">{attendancePct !== null ? `${attendancePct}%` : "—"}</p>
@@ -67,7 +115,6 @@ export default async function DashboardPage({
         </div>
       </div>
 
-      <h2 className="font-display text-lg font-medium mb-3">Recent exam results</h2>
       <div className="bg-paper-raised border border-line rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-paper text-left text-slate">

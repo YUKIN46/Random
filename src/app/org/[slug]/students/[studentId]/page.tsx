@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/authz";
 import EditStudentForm from "./edit-student-form";
 import DeleteStudentButton from "./delete-student-button";
+import GuardiansSection from "./guardians-section";
 
 export default async function StudentDetailPage({
   params,
@@ -22,6 +23,7 @@ export default async function StudentDetailPage({
       attendance: { orderBy: { date: "desc" }, take: 10 },
       examResults: { include: { exam: { include: { subject: true } } }, orderBy: { exam: { examDate: "desc" } }, take: 10 },
       invoices: { orderBy: { dueDate: "desc" }, take: 10 },
+      guardians: { include: { parentUser: true }, orderBy: { createdAt: "asc" } },
     },
   });
 
@@ -71,6 +73,20 @@ export default async function StudentDetailPage({
         </div>
 
         <div className="space-y-6">
+          <div>
+            <h2 className="font-display text-lg font-semibold text-ink mb-3">Guardians</h2>
+            <GuardiansSection
+              slug={slug}
+              studentId={student.id}
+              guardians={student.guardians.map((g) => ({
+                id: g.id,
+                name: g.parentUser.name,
+                email: g.parentUser.email,
+                relationship: g.relationship ?? "",
+              }))}
+            />
+          </div>
+
           <div>
             <h2 className="font-display text-lg font-semibold text-ink mb-3">
               Attendance{" "}

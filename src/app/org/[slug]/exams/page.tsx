@@ -14,6 +14,13 @@ export default async function ExamsPage({
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
   const isStaff = ["ORG_ADMIN", "TEACHER", "SUPER_ADMIN"].includes(user.role);
 
+  const childStudentIds =
+    user.role === "PARENT"
+      ? (await prisma.guardian.findMany({ where: { parentUserId: user.id }, select: { studentId: true } })).map(
+          (g) => g.studentId
+        )
+      : [];
+
   const exams = await prisma.exam.findMany({
     where: { organizationId: org.id },
     include: {
@@ -67,31 +74,39 @@ export default async function ExamsPage({
                 Enter results
               </Link>
             )}
-            <table className="w-full text-sm">
-              <thead className="text-left text-slate">
-                <tr>
-                  <th className="py-1 font-medium">Student</th>
-                  <th className="py-1 font-medium">Marks</th>
-                  <th className="py-1 font-medium">Grade</th>
-                </tr>
-              </thead>
-              <tbody>
-                {exam.results
-                  .filter((r) => user.role !== "STUDENT" || r.student.userId === user.id)
-                  .map((r) => (
-                    <tr key={r.id} className="border-t border-line">
-                      <td className="py-1.5">{r.student.user.name}</td>
-                      <td className="py-1.5">{r.marksObtained} / {exam.maxMarks}</td>
-                      <td className="py-1.5">{r.grade ?? "—"}</td>
+            {(() => {
+              const visibleResults = exam.results.filter(
+                (r) =>
+                  isStaff ||
+                  (user.role === "STUDENT" && r.student.userId === user.id) ||
+                  (user.role === "PARENT" && childStudentIds.includes(r.studentId))
+              );
+              return (
+                <table className="w-full text-sm">
+                  <thead className="text-left text-slate">
+                    <tr>
+                      <th className="py-1 font-medium">Student</th>
+                      <th className="py-1 font-medium">Marks</th>
+                      <th className="py-1 font-medium">Grade</th>
                     </tr>
-                  ))}
-                {exam.results.length === 0 && (
-                  <tr>
-                    <td colSpan={3} className="py-3 text-center text-slate">No results entered yet.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                    {visibleResults.map((r) => (
+                      <tr key={r.id} className="border-t border-line">
+                        <td className="py-1.5">{r.student.user.name}</td>
+                        <td className="py-1.5">{r.marksObtained} / {exam.maxMarks}</td>
+                        <td className="py-1.5">{r.grade ?? "—"}</td>
+                      </tr>
+                    ))}
+                    {visibleResults.length === 0 && (
+                      <tr>
+                        <td colSpan={3} className="py-3 text-center text-slate">No results yet.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              );
+            })()}
           </div>
         ))}
         {exams.length === 0 && <p className="text-slate">No exams scheduled yet.</p>}

@@ -98,6 +98,7 @@ model User {
 
   teacherProfile Teacher?
   studentProfile Student?
+  guardianOf     Guardian[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -195,6 +196,19 @@ model Subject {
   @@unique([organizationId, name])
 }
 
+model Guardian {
+  id             String   @id @default(cuid())
+  studentId      String
+  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  parentUserId   String
+  parentUser     User     @relation(fields: [parentUserId], references: [id], onDelete: Cascade)
+  relationship   String? // "Mother", "Father", "Guardian", etc.
+  createdAt      DateTime @default(now())
+
+  @@unique([studentId, parentUserId])
+  @@index([parentUserId])
+}
+
 // ─────────────────────────────────────────────
 // PEOPLE
 // ─────────────────────────────────────────────
@@ -246,6 +260,7 @@ model Student {
   attendance      AttendanceRecord[]
   examResults     ExamResult[]
   invoices        Invoice[]
+  guardians       Guardian[]
 
   @@index([organizationId])
   @@index([sectionId])
