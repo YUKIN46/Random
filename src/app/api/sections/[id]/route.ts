@@ -26,8 +26,15 @@ export async function PATCH(
   const { slug, name, classTeacherId } = parsed.data;
 
   await requireRole(slug, ["ORG_ADMIN"]);
+  const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
   if (!(await assertOwnership(id, slug))) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+  if (classTeacherId) {
+    const teacher = await prisma.teacher.findUnique({ where: { id: classTeacherId } });
+    if (!teacher || teacher.organizationId !== org.id) {
+      return NextResponse.json({ error: "Invalid class teacher" }, { status: 400 });
+    }
   }
 
   await prisma.section.update({

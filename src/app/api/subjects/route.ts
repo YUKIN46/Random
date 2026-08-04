@@ -23,13 +23,22 @@ export async function POST(req: NextRequest) {
   });
   if (existing) return NextResponse.json({ error: "That subject already exists" }, { status: 409 });
 
+  let validTeacherIds: string[] = [];
+  if (teacherIds?.length) {
+    const validTeachers = await prisma.teacher.findMany({
+      where: { id: { in: teacherIds }, organizationId: org.id },
+      select: { id: true },
+    });
+    validTeacherIds = validTeachers.map((t) => t.id);
+  }
+
   const subject = await prisma.subject.create({
     data: {
       organization: { connect: { id: org.id } },
       name,
       code: code || null,
-      teacherLinks: teacherIds?.length
-        ? { create: teacherIds.map((teacherId) => ({ teacherId })) }
+      teacherLinks: validTeacherIds.length
+        ? { create: validTeacherIds.map((teacherId) => ({ teacherId })) }
         : undefined,
     },
   });

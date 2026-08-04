@@ -32,6 +32,13 @@ export async function PATCH(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
+  if (sectionId) {
+    const section = await prisma.section.findUnique({ where: { id: sectionId } });
+    if (!section || section.organizationId !== org.id) {
+      return NextResponse.json({ error: "Invalid section" }, { status: 400 });
+    }
+  }
+
   await prisma.student.update({
     where: { id },
     data: {

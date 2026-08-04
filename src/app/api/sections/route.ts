@@ -18,6 +18,17 @@ export async function POST(req: NextRequest) {
   await requireRole(slug, ["ORG_ADMIN"]);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
+  const schoolClass = await prisma.schoolClass.findUnique({ where: { id: classId } });
+  if (!schoolClass || schoolClass.organizationId !== org.id) {
+    return NextResponse.json({ error: "Invalid class" }, { status: 400 });
+  }
+  if (classTeacherId) {
+    const teacher = await prisma.teacher.findUnique({ where: { id: classTeacherId } });
+    if (!teacher || teacher.organizationId !== org.id) {
+      return NextResponse.json({ error: "Invalid class teacher" }, { status: 400 });
+    }
+  }
+
   const existing = await prisma.section.findUnique({
     where: { classId_name: { classId, name } },
   });

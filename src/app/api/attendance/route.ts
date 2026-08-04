@@ -22,11 +22,25 @@ export async function POST(req: NextRequest) {
 
   await requireRole(slug, ["ORG_ADMIN", "TEACHER"]);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
+
+  const section = await prisma.section.findUnique({ where: { id: sectionId } });
+  if (!section || section.organizationId !== org.id) {
+    return NextResponse.json({ error: "Invalid section" }, { status: 400 });
+  }
+
+  const studentIds = records.map((r) => r.studentId);
+  const validStudents = await prisma.student.findMany({
+    where: { id: { in: studentIds }, organizationId: org.id },
+    select: { id: true },
+  });
+  const validIds = new Set(validStudents.map((s) => s.id));
+  const safeRecords = records.filter((r) => validIds.has(r.studentId));
+
   const day = new Date(date);
   day.setHours(0, 0, 0, 0);
 
   await prisma.$transaction(
-    records.map((r) =>
+    safeRecords.map((r) =>
       prisma.attendanceRecord.upsert({
         where: { studentId_date: { studentId: r.studentId, date: day } },
         create: {

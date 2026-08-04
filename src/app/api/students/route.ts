@@ -25,6 +25,13 @@ export async function POST(req: NextRequest) {
   await requireRole(slug, ["ORG_ADMIN", "TEACHER"]);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
+  if (sectionId) {
+    const section = await prisma.section.findUnique({ where: { id: sectionId } });
+    if (!section || section.organizationId !== org.id) {
+      return NextResponse.json({ error: "Invalid section" }, { status: 400 });
+    }
+  }
+
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
     return NextResponse.json({ error: "Email already in use" }, { status: 409 });

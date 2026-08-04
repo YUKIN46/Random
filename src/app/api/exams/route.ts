@@ -20,6 +20,11 @@ export async function POST(req: NextRequest) {
   await requireRole(slug, ["ORG_ADMIN", "TEACHER"]);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
+  const subject = await prisma.subject.findUnique({ where: { id: subjectId } });
+  if (!subject || subject.organizationId !== org.id) {
+    return NextResponse.json({ error: "Invalid subject" }, { status: 400 });
+  }
+
   const exam = await prisma.exam.create({
     data: {
       organizationId: org.id,

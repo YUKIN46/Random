@@ -19,6 +19,17 @@ export async function POST(req: NextRequest) {
   await requireRole(slug, ["ORG_ADMIN", "ACCOUNTANT"]);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
+  const student = await prisma.student.findUnique({ where: { id: studentId } });
+  if (!student || student.organizationId !== org.id) {
+    return NextResponse.json({ error: "Invalid student" }, { status: 400 });
+  }
+  if (feeStructureId) {
+    const feeStructure = await prisma.feeStructure.findUnique({ where: { id: feeStructureId } });
+    if (!feeStructure || feeStructure.organizationId !== org.id) {
+      return NextResponse.json({ error: "Invalid fee structure" }, { status: 400 });
+    }
+  }
+
   const invoice = await prisma.invoice.create({
     data: {
       organizationId: org.id,
