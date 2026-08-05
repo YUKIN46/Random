@@ -2,21 +2,35 @@ import { prisma } from "@/lib/prisma";
 import { requireOrgMember } from "@/lib/authz";
 import NewNoteForm from "./new-note-form";
 import DeleteNoteButton from "./delete-note-button";
+import Pagination from "@/components/pagination";
+
+const PAGE_SIZE = 15;
 
 export default async function NotesPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
   const { slug } = await params;
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
   const user = await requireOrgMember(slug);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
-  const notes = await prisma.note.findMany({
-    where: { organizationId: org.id },
-    orderBy: { createdAt: "desc" },
-    take: 50,
-  });
+  const where = { organizationId: org.id };
+  const [notes, totalCount] = await Promise.all([
+    prisma.note.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+    }),
+    prisma.note.count({ where }),
+  ]);
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   return (
     <div>
@@ -40,6 +54,12 @@ export default async function NotesPage({
         ))}
         {notes.length === 0 && <p className="text-slate">No notes yet.</p>}
       </div>
+
+      <Pagination
+        basePath={`/org/${slug}/notes`}
+        currentPage={page}
+        totalPages={totalPages}
+      />
     </div>
   );
 }

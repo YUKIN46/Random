@@ -3,30 +3,46 @@ import { requireOrgMember } from "@/lib/authz";
 import NewInvoiceForm from "./new-invoice-form";
 import PayButton from "./pay-button";
 import InvoiceCancelButton from "./invoice-cancel-button";
+import Pagination from "@/components/pagination";
+
+const PAGE_SIZE = 25;
 
 export default async function FeesPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
   const { slug } = await params;
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
   const user = await requireOrgMember(slug);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
   const isStaff = ["ORG_ADMIN", "ACCOUNTANT", "SUPER_ADMIN"].includes(user.role);
 
-  const invoices = await prisma.invoice.findMany({
-    where: {
-      organizationId: org.id,
-      ...(isStaff
-        ? {}
-        : user.role === "PARENT"
-        ? { student: { guardians: { some: { parentUserId: user.id } } } }
-        : { student: { userId: user.id } }),
-    },
-    include: { student: { include: { user: true } } },
-    orderBy: { dueDate: "desc" },
-  });
+  const where = {
+    organizationId: org.id,
+    ...(isStaff
+      ? {}
+      : user.role === "PARENT"
+      ? { student: { guardians: { some: { parentUserId: user.id } } } }
+      : { student: { userId: user.id } }),
+  };
+
+  const [invoices, totalCount] = await Promise.all([
+    prisma.invoice.findMany({
+      where,
+      include: { student: { include: { user: true } } },
+      orderBy: { dueDate: "desc" },
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+    }),
+    prisma.invoice.count({ where }),
+  ]);
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   const students = isStaff
     ? await prisma.student.findMany({
@@ -93,6 +109,12 @@ export default async function FeesPage({
           </tbody>
         </table>
       </div>
+
+      <Pagination
+        basePath={`/org/${slug}/fees`}
+        currentPage={page}
+        totalPages={totalPages}
+      />
     </div>
   );
 }

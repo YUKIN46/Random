@@ -3,40 +3,55 @@ import { prisma } from "@/lib/prisma";
 import { requireOrgMember } from "@/lib/authz";
 import AddTeacherForm from "./add-teacher-form";
 import SearchBox from "@/components/search-box";
+import Pagination from "@/components/pagination";
+
+const PAGE_SIZE = 25;
 
 export default async function TeachersPage({
   params,
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; page?: string }>;
 }) {
   const { slug } = await params;
-  const { q } = await searchParams;
+  const { q, page: pageParam } = await searchParams;
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
   await requireOrgMember(slug);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
-  const teachers = await prisma.teacher.findMany({
-    where: {
-      organizationId: org.id,
-      ...(q
-        ? {
-            OR: [
-              { user: { name: { contains: q, mode: "insensitive" } } },
-              { user: { email: { contains: q, mode: "insensitive" } } },
-              { employeeCode: { contains: q, mode: "insensitive" } },
-            ],
-          }
-        : {}),
-    },
-    include: { user: true, subjects: { include: { subject: true } } },
-    orderBy: { user: { name: "asc" } },
-  });
+  const where = {
+    organizationId: org.id,
+    ...(q
+      ? {
+          OR: [
+            { user: { name: { contains: q, mode: "insensitive" as const } } },
+            { user: { email: { contains: q, mode: "insensitive" as const } } },
+            { employeeCode: { contains: q, mode: "insensitive" as const } },
+          ],
+        }
+      : {}),
+  };
+
+  const [teachers, totalCount] = await Promise.all([
+    prisma.teacher.findMany({
+      where,
+      include: { user: true, subjects: { include: { subject: true } } },
+      orderBy: { user: { name: "asc" } },
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+    }),
+    prisma.teacher.count({ where }),
+  ]);
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <h1 className="font-display text-2xl font-semibold">Teachers</h1>
+        <h1 className="font-display text-2xl font-semibold">
+          Teachers <span className="font-mono text-sm font-normal text-slate">({totalCount})</span>
+        </h1>
         <SearchBox placeholder="Search teachers…" />
       </div>
       <AddTeacherForm slug={slug} />
@@ -75,6 +90,13 @@ export default async function TeachersPage({
           </tbody>
         </table>
       </div>
+
+      <Pagination
+        basePath={`/org/${slug}/teachers`}
+        currentPage={page}
+        totalPages={totalPages}
+        searchParams={{ q }}
+      />
     </div>
   );
 }

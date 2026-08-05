@@ -4,46 +4,59 @@ import { requireOrgMember } from "@/lib/authz";
 import AddStudentForm from "./add-student-form";
 import BulkImportStudents from "./bulk-import-students";
 import SearchBox from "@/components/search-box";
+import Pagination from "@/components/pagination";
+
+const PAGE_SIZE = 25;
 
 export default async function StudentsPage({
   params,
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; page?: string }>;
 }) {
   const { slug } = await params;
-  const { q } = await searchParams;
+  const { q, page: pageParam } = await searchParams;
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
   await requireOrgMember(slug);
   const org = await prisma.organization.findUniqueOrThrow({ where: { slug } });
 
-  const [students, sections] = await Promise.all([
+  const where = {
+    organizationId: org.id,
+    ...(q
+      ? {
+          OR: [
+            { user: { name: { contains: q, mode: "insensitive" as const } } },
+            { user: { email: { contains: q, mode: "insensitive" as const } } },
+            { admissionNo: { contains: q, mode: "insensitive" as const } },
+          ],
+        }
+      : {}),
+  };
+
+  const [students, totalCount, sections] = await Promise.all([
     prisma.student.findMany({
-      where: {
-        organizationId: org.id,
-        ...(q
-          ? {
-              OR: [
-                { user: { name: { contains: q, mode: "insensitive" } } },
-                { user: { email: { contains: q, mode: "insensitive" } } },
-                { admissionNo: { contains: q, mode: "insensitive" } },
-              ],
-            }
-          : {}),
-      },
+      where,
       include: { user: true, section: { include: { schoolClass: true } } },
       orderBy: { user: { name: "asc" } },
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
     }),
+    prisma.student.count({ where }),
     prisma.section.findMany({
       where: { organizationId: org.id },
       include: { schoolClass: true },
     }),
   ]);
 
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <h1 className="font-display text-2xl font-semibold">Students</h1>
+        <h1 className="font-display text-2xl font-semibold">
+          Students <span className="font-mono text-sm font-normal text-slate">({totalCount})</span>
+        </h1>
         <SearchBox placeholder="Search students…" />
       </div>
 
@@ -90,6 +103,13 @@ export default async function StudentsPage({
           </tbody>
         </table>
       </div>
+
+      <Pagination
+        basePath={`/org/${slug}/students`}
+        currentPage={page}
+        totalPages={totalPages}
+        searchParams={{ q }}
+      />
     </div>
   );
 }
