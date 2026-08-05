@@ -1,10 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { requireOrgMember } from "@/lib/authz";
 
+const OUTSTANDING_STATUSES: ("UNPAID" | "PARTIAL" | "OVERDUE")[] = ["UNPAID", "PARTIAL", "OVERDUE"];
+
 const STUDENT_INCLUDE = {
   section: { include: { schoolClass: true } },
   attendance: { orderBy: { date: "desc" as const }, take: 30 },
-  invoices: { where: { status: { in: ["UNPAID", "PARTIAL", "OVERDUE"] as const } } },
+  invoices: { where: { status: { in: OUTSTANDING_STATUSES } } },
   examResults: { include: { exam: { include: { subject: true } } }, orderBy: { exam: { examDate: "desc" as const } }, take: 5 },
 };
 
